@@ -12,7 +12,7 @@ import java.util.List;
 
 import il.co.johnbryce.coupons_system.javabeans.Coupon;
 import il.co.johnbryce.coupons_system.javabeans.CouponType;
-import il.co.johnbryce.utils.ConnectionPool;
+import il.co.johnbryce.coupons_system.utils.ConnectionPool;
 
 public class CouponDBDAO implements CouponDAO {
 	private ConnectionPool _pool;

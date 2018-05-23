@@ -11,7 +11,7 @@ import java.util.List;
 
 import il.co.johnbryce.coupons_system.javabeans.Company;
 import il.co.johnbryce.coupons_system.javabeans.Coupon;
-import il.co.johnbryce.utils.ConnectionPool;
+import il.co.johnbryce.coupons_system.utils.ConnectionPool;
 
 public class CompanyDBDAO implements CompanyDAO {
 	private ConnectionPool _pool;

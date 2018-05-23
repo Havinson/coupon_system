@@ -4,12 +4,12 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
+import il.co.johnbryce.coupons_system.facades.AdminFacade;
+import il.co.johnbryce.coupons_system.facades.ClientType;
+import il.co.johnbryce.coupons_system.facades.CompanyFacade;
+import il.co.johnbryce.coupons_system.facades.CouponSystem;
 import il.co.johnbryce.coupons_system.javabeans.Coupon;
 import il.co.johnbryce.coupons_system.javabeans.CouponType;
-import il.co.johnbryce.facades.ClientType;
-import il.co.johnbryce.facades.CompanyFacade;
-import il.co.johnbryce.facades.CouponSystem;
-import il.co.johnbryce.facades.AdminFacade;
 public class test {
 
 	public static void main(String[] args) {
