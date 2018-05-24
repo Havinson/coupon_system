@@ -13,8 +13,8 @@ import il.co.johnbryce.coupons_system.javabeans.CouponType;
 public class test {
 
 	public static void main(String[] args) {
-		Coupon coupon = new Coupon(4l, "camping discount3", Date.valueOf("2019-05-14"), Date.valueOf("2020-05-14"), 50, CouponType.CAMPING.name(), "if this works its incredable", 26.5, "image url");
-		AdminFacade comp = (AdminFacade) CouponSystem.getCouponSystem().login("Admin", "12345", ClientType.ADMIN);
+//		Coupon coupon = new Coupon(4l, "camping discount3", Date.valueOf("2019-05-14"), Date.valueOf("2020-05-14"), 50, CouponType.CAMPING.name(), "if this works its incredable", 26.5, "image url");
+//		AdminFacade comp = (AdminFacade) CouponSystem.getCouponSystem().login("Admin", "12345", ClientType.ADMIN);
 //		comp.updateCoupon(coupon);
 //				comp.createCoupon(coupon);
 //		System.out.println(coupon.get_startDate());
