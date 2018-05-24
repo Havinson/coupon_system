@@ -87,8 +87,8 @@ public class CouponDBDAO implements CouponDAO {
 					+ " WHERE ID = ?;");
 			prepStm.setLong(1, coupon.get_id());
 			prepStm.setString(2, coupon.get_title());
-			prepStm.setDate(3, coupon.get_startDate());
-			prepStm.setDate(4, coupon.get_endDate());
+			prepStm.setDate(3, new Date(coupon.get_startDate().getTime()));
+			prepStm.setDate(4, new Date(coupon.get_endDate().getTime()));
 			prepStm.setInt(5, coupon.get_amount());
 			prepStm.setString(6, coupon.get_type().name());
 			prepStm.setString(7, coupon.get_message());

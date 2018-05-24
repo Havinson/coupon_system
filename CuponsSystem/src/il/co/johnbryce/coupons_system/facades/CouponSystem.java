@@ -20,7 +20,6 @@ public class CouponSystem {
 			client = new AdminFacade().login(userName, password, type);
 			break;
 		case COMPANY:
-			CompanyDAO company = new CompanyDBDAO();
 			client = new CompanyFacade().login(userName, password, type);
 			break;
 		case CUSTOMER:
