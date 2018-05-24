@@ -2,8 +2,6 @@ package il.co.johnbryce.coupons_system.dao;
 
 import java.util.Collection;
 
-import il.co.johnbryce.coupons_system.javabeans.Company;
-import il.co.johnbryce.coupons_system.javabeans.Coupon;
 
 public interface CompanyDAO {
 	public void createCompany(Company comp);
