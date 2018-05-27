@@ -8,9 +8,11 @@ import java.util.Set;
 public class ConnectionPool {
 	private static ConnectionPool _instance = new ConnectionPool();
 	private Set<Connection> _connection;
+	private int _counter;
 	
 	private ConnectionPool() {
 		_connection = new HashSet<Connection>();
+		_counter = 0;
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			for (int i = 0; i < 9; i++) {

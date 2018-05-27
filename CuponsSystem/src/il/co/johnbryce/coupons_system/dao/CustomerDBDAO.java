@@ -174,8 +174,25 @@ public class CustomerDBDAO implements CustomerDAO {
 
 	@Override
 	public boolean login(String customerName, String password) {
-		// TODO Auto-generated method stub
-		return false;
+		PreparedStatement prepStm;
+		ResultSet resultSet;
+		Connection conn;
+		boolean ret = false;
+		try {
+			conn = _pool.getConnection();
+			prepStm = conn.prepareStatement("select CustomerName, Password from Customer");
+			resultSet = prepStm.executeQuery();
+			while(resultSet.next()) {
+				if(customerName == resultSet.getString("CustomerName") && password == resultSet.getString("Password") ) {}
+				ret = true;
+				break;
+			}
+		}catch(SQLException e) {
+			//TODO: Take care of exception
+		}catch(Exception e) {
+			//TODO: Take care of exception
+		}
+		return ret;
 	}// login
 
 }// Customer DBDAO

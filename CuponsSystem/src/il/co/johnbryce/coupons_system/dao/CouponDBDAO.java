@@ -12,6 +12,7 @@ import java.util.List;
 
 import il.co.johnbryce.coupons_system.javabeans.Coupon;
 import il.co.johnbryce.coupons_system.javabeans.CouponType;
+import il.co.johnbryce.coupons_system.javabeans.Customer;
 import il.co.johnbryce.coupons_system.utils.ConnectionPool;
 
 public class CouponDBDAO implements CouponDAO {
@@ -184,5 +185,30 @@ public class CouponDBDAO implements CouponDAO {
 			System.out.println("This is not SQL server problem, please torn to administrator");
 		}
 		return coupons;
-	}
+	}// get coupons by type
+
+	@Override
+	public boolean checkCouponExisting(Coupon coupon, Customer customer) {
+		boolean ret = false;
+		Connection conn;
+		ResultSet resultSet;
+		PreparedStatement prepStm;
+		try {
+			conn = _pool.getConnection();
+			prepStm = conn.prepareStatement("select Coupon_ID from CustomerCoupon where Customer_ID = ?");
+			prepStm.setLong(1, customer.getId());
+			resultSet = prepStm.executeQuery();
+			while(resultSet.next()) {
+				if(resultSet.getLong("Coupon_ID") == coupon.get_id()) {
+					ret = true;
+					break;
+				}
+			}
+		}catch (SQLException e) {
+			//TODO: take care of SQLexception
+		}catch (Exception e) {
+			//TODO: Take care of exception
+		}
+		return ret;
+	}// check coupon existing
 }// Coupon DBDAO
