@@ -12,6 +12,7 @@ public interface CouponDAO {
 	public void updateCoupon(Coupon coupon);
 	public Coupon getCoupon (long id);
 	public Collection<Coupon> getAllCoupons();
+	public Collection<Coupon> getAllCompanyCoupons(long id);
 	public Collection<Coupon> getCouponByType(CouponType type);
 	public boolean checkCouponExisting(Coupon coupon, Customer customer);
 	public int checkCouponAmount(Coupon coupon);

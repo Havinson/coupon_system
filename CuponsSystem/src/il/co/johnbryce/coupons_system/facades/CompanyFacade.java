@@ -2,6 +2,7 @@ package il.co.johnbryce.coupons_system.facades;
 
 import java.util.Collection;
 
+import il.co.johnbryce.coupons_system.dao.CompanyDAO;
 import il.co.johnbryce.coupons_system.dao.CouponDAO;
 import il.co.johnbryce.coupons_system.dao.CouponDBDAO;
 import il.co.johnbryce.coupons_system.javabeans.Coupon;
@@ -9,12 +10,13 @@ import il.co.johnbryce.coupons_system.javabeans.CouponType;
 
 public class CompanyFacade implements CouponClientFacade {
 	private CouponDAO _couponDAO;
-	
+	private CompanyDAO _compamyDao;
 	public CompanyFacade(){
 		_couponDAO = new CouponDBDAO();
 	}// c-tor
 	@Override
 	public CouponClientFacade login(String userName, String password, ClientType type) {
+		
 		return this;
 	}//login
 	
@@ -30,7 +32,7 @@ public class CompanyFacade implements CouponClientFacade {
 	}// get coupon
 	
 	public Collection<Coupon> getAllCoupons(){
-		return _couponDAO.getAllCoupons();
+		return _couponDAO.getAllCompanyCoupons(id);
 	}// get all coupons
 	
 	public Collection<Coupon> getCouponByType(CouponType type){

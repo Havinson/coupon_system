@@ -21,9 +21,12 @@ public class CustomerFacade implements CouponClientFacade {
 	}// c-tor
 	@Override
 	public CustomerFacade login(String userName, String password, ClientType type) {
-		_customerDao.login(userName, password);
+		CustomerFacade ret = null;
+		if(_customerDao.login(userName, password)) {
+			ret = this;
+		};
 		_currentCustomer = _customerDao.getLoggedInCustomer(userName, password);
-		return this;
+		return ret;
 		
 	}// login
 	

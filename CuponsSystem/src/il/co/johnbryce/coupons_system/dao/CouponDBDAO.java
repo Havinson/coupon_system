@@ -234,4 +234,30 @@ public class CouponDBDAO implements CouponDAO {
 		}
 		return amount;
 	}// check coupon amount
+
+	@Override
+	public Collection<Coupon> getAllCompanyCoupons(long companyId) {
+		List<Coupon> coupons = new ArrayList<>();
+		PreparedStatement stm;
+		ResultSet resultSet;
+		Connection conn = null;
+
+		try {
+			conn = _pool.getConnection();
+			stm = conn.prepareStatement("SELECT Coupon_ID FROM CompanyCoupon where Company_ID = ?");
+			stm.setLong(1, companyId);
+			resultSet = stm.executeQuery();
+			while (resultSet.next()) {
+				coupons.add(this.getCoupon(resultSet.getLong("ID")));
+			}
+			_pool.returnConnection(conn);
+		} catch (SQLException e) {
+			System.out.println("You have trouble with connection to database.");
+			System.out.println("Please, check your connection.");
+		} catch (Exception e) {
+			System.out.println("This is not SQL server problem, please turn to administrator");
+		}
+
+		return coupons;
+	}// get all company coupons
 }// Coupon DBDAO
