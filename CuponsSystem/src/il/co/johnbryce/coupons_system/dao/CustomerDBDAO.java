@@ -167,7 +167,7 @@ public class CustomerDBDAO implements CustomerDAO {
 			System.out.println("Please, check you company coupons and your`s connection.");
 		} catch (Exception e) {
 //			TODO: take care of exception
-			System.out.println("This is not SQL server problem, please torn to administrator");
+			System.out.println("This is not SQL server problem, please turn to administrator");
 		}
 		return coupons;
 	}// get coupons
@@ -187,6 +187,7 @@ public class CustomerDBDAO implements CustomerDAO {
 				ret = true;
 				break;
 			}
+			_pool.returnConnection(conn);
 		}catch(SQLException e) {
 			//TODO: Take care of exception
 		}catch(Exception e) {
@@ -194,5 +195,10 @@ public class CustomerDBDAO implements CustomerDAO {
 		}
 		return ret;
 	}// login
+	@Override
+	public Customer getLoggedInCustomer(String customerName, String password) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }// Customer DBDAO
