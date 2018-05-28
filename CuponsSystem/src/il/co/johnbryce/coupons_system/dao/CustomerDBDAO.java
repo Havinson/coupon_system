@@ -10,24 +10,25 @@ import java.util.Collection;
 import java.util.List;
 
 import il.co.johnbryce.coupons_system.javabeans.Coupon;
+import il.co.johnbryce.coupons_system.javabeans.CouponType;
 import il.co.johnbryce.coupons_system.javabeans.Customer;
 import il.co.johnbryce.coupons_system.utils.ConnectionPool;
 
 public class CustomerDBDAO implements CustomerDAO {
 	private ConnectionPool _pool;
-	
+	private Customer _currentCustomer;
+
 	public CustomerDBDAO() {
 		_pool = ConnectionPool.getConnectionPool();
 	}// c-tor
+
 	@Override
 	public void createCustomer(Customer customer) {
 		PreparedStatement prepStm = null;
 		Connection conn = null;
 		try {
 			conn = _pool.getConnection();
-			prepStm = conn.prepareStatement(
-					"INSERT INTO Customer (ID, CustomerName, Password) "
-							+ "VALUES (?, ?, ?)");
+			prepStm = conn.prepareStatement("INSERT INTO Customer (ID, CustomerName, Password) " + "VALUES (?, ?, ?)");
 			prepStm.setLong(1, customer.getId());
 			prepStm.setString(2, customer.getCustomerName());
 			prepStm.setString(3, customer.getPassword());
@@ -60,8 +61,8 @@ public class CustomerDBDAO implements CustomerDAO {
 			System.out.println("Or you have trouble with connection to database.");
 			System.out.println("Please, check customer ID and your`s connection.");
 		} catch (Exception e) {
-//			TODO: take care of exception
-		}	
+			// TODO: take care of exception
+		}
 	}// remove customer
 
 	@Override
@@ -70,11 +71,8 @@ public class CustomerDBDAO implements CustomerDAO {
 		Connection conn = null;
 		try {
 			conn = _pool.getConnection();
-			prepStm = conn.prepareStatement("UPDATE Customer SET "
-					+ "ID = ?, "
-					+ "CompanyName = ?,"
-					+ "Password = ?"
-					+ " WHERE ID = ?;");
+			prepStm = conn.prepareStatement(
+					"UPDATE Customer SET " + "ID = ?, " + "CompanyName = ?," + "Password = ?" + " WHERE ID = ?;");
 			prepStm.setLong(1, customer.getId());
 			prepStm.setString(2, customer.getCustomerName());
 			prepStm.setString(3, customer.getPassword());
@@ -89,7 +87,7 @@ public class CustomerDBDAO implements CustomerDAO {
 			System.out.println("Please, check you customer ID and your`s connection.");
 		} catch (Exception e) {
 			System.out.println("It`s not SQL server problem, please turn to your administrtor.");
-//		TODO: take care of exception
+			// TODO: take care of exception
 		}
 	}// update customer
 
@@ -105,7 +103,8 @@ public class CustomerDBDAO implements CustomerDAO {
 			prepStm.setLong(1, id);
 			resultSet = prepStm.executeQuery();
 			resultSet.next();
-			customer = new Customer(resultSet.getLong("CustomerID"), resultSet.getString("CustomerName"), resultSet.getString("Password"));
+			customer = new Customer(resultSet.getLong("CustomerID"), resultSet.getString("CustomerName"),
+					resultSet.getString("Password"));
 			_pool.returnConnection(conn);
 		} catch (SQLException e) {
 			System.out.println("A customer with this ID is not exist!");
@@ -114,7 +113,7 @@ public class CustomerDBDAO implements CustomerDAO {
 			System.out.println("Please, check you customer ID and your`s connection.");
 		} catch (Exception e) {
 			System.out.println("It`s not SQL server problem, please torn to administrator!");
-//		TODO: take care of exception
+			// TODO: take care of exception
 		}
 		return customer;
 	}// get customer
@@ -139,7 +138,7 @@ public class CustomerDBDAO implements CustomerDAO {
 			System.out.println("Please, check your connection.");
 		} catch (Exception e) {
 			System.out.println("This is not SQL server problem, please torn to administrator");
-//		TODO: take care of exception
+			// TODO: take care of exception
 		}
 		return customers;
 	}// get all customers
@@ -166,7 +165,7 @@ public class CustomerDBDAO implements CustomerDAO {
 			System.out.println("Or you have trouble with connection to database.");
 			System.out.println("Please, check you company coupons and your`s connection.");
 		} catch (Exception e) {
-//			TODO: take care of exception
+			// TODO: take care of exception
 			System.out.println("This is not SQL server problem, please turn to administrator");
 		}
 		return coupons;
@@ -182,23 +181,46 @@ public class CustomerDBDAO implements CustomerDAO {
 			conn = _pool.getConnection();
 			prepStm = conn.prepareStatement("select CustomerName, Password from Customer");
 			resultSet = prepStm.executeQuery();
-			while(resultSet.next()) {
-				if(customerName == resultSet.getString("CustomerName") && password == resultSet.getString("Password") ) {}
-				ret = true;
-				break;
+			while (resultSet.next()) {
+				if (customerName == resultSet.getString("CustomerName")
+						&& password == resultSet.getString("Password")) {
+					ret = true;
+					_currentCustomer = new Customer(resultSet.getLong("ID"), resultSet.getString("CustomerName"),
+							resultSet.getString("Password"));
+					break;
+				}
 			}
 			_pool.returnConnection(conn);
-		}catch(SQLException e) {
-			//TODO: Take care of exception
-		}catch(Exception e) {
-			//TODO: Take care of exception
+		} catch (SQLException e) {
+			// TODO: Take care of exception
+		} catch (Exception e) {
+			// TODO: Take care of exception
 		}
 		return ret;
 	}// login
+
 	@Override
 	public Customer getLoggedInCustomer(String customerName, String password) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+		PreparedStatement prepStm;
+		ResultSet resultSet;
+		Connection conn;
+		Customer customer = null;
+		try {
+			conn = _pool.getConnection();
+			prepStm = conn.prepareStatement("select ID from Customer where CustomerName = ? , Password = ?;");
+			prepStm.setString(1, customerName);
+			prepStm.setString(2, password);
+			resultSet = prepStm.executeQuery();
+			resultSet.next();
+			customer = new Customer(resultSet.getLong("ID"), customerName, password);
+			_pool.returnConnection(conn);
+		} catch (SQLException e) {
+			// TODO: take care of SQLException
+		} catch (Exception e) {
+			// TODO: take care of SQLException
+		}
+		return customer;
+	}// get logged in customer
+
 
 }// Customer DBDAO

@@ -203,6 +203,7 @@ public class CouponDBDAO implements CouponDAO {
 					ret = true;
 					break;
 				}
+			_pool.returnConnection(conn);
 			}
 		}catch (SQLException e) {
 			//TODO: take care of SQLexception
@@ -211,4 +212,26 @@ public class CouponDBDAO implements CouponDAO {
 		}
 		return ret;
 	}// check coupon existing
+	
+	public int checkCouponAmount(Coupon coupon) {
+		int amount = 0;
+		Connection conn;
+		ResultSet resultSet;
+		PreparedStatement prepStm;
+		try {
+			conn = _pool.getConnection();
+			prepStm = conn.prepareStatement("select Amount from Coupon where ID = ?;");
+			prepStm.setLong(1, coupon.get_id());
+			resultSet = prepStm.executeQuery();
+			resultSet.next();
+			amount = resultSet.getInt("Amount");
+			
+			_pool.returnConnection(conn);
+		}catch (SQLException e) {
+//			TODO: take care of SQLException
+		}catch (Exception e) {
+//			TODO: take care of Exception
+		}
+		return amount;
+	}// check coupon amount
 }// Coupon DBDAO

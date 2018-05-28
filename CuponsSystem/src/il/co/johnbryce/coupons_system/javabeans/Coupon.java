@@ -79,7 +79,7 @@ public class Coupon {
 	}// set end date
 
 	public void set_amount(int amount) {
-		_amount = amount;
+		_amount = _amount + amount;
 	}// set amount
 
 	public void set_type(CouponType type) {
