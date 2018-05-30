@@ -5,19 +5,25 @@ import java.util.Collection;
 import il.co.johnbryce.coupons_system.dao.CompanyDAO;
 import il.co.johnbryce.coupons_system.dao.CouponDAO;
 import il.co.johnbryce.coupons_system.dao.CouponDBDAO;
+import il.co.johnbryce.coupons_system.javabeans.Company;
 import il.co.johnbryce.coupons_system.javabeans.Coupon;
 import il.co.johnbryce.coupons_system.javabeans.CouponType;
 
 public class CompanyFacade implements CouponClientFacade {
 	private CouponDAO _couponDAO;
-	private CompanyDAO _compamyDao;
+	private CompanyDAO _companyDao;
+	private Company _currentCompany;
 	public CompanyFacade(){
 		_couponDAO = new CouponDBDAO();
 	}// c-tor
 	@Override
 	public CouponClientFacade login(String userName, String password, ClientType type) {
-		
-		return this;
+		CompanyFacade ret = null;
+		if(_companyDao.login(userName, password)) {
+			ret = this;
+			_currentCompany = _companyDao.getLoggedInCompany(userName, password);
+		}
+		return ret;
 	}//login
 	
 	public void updateCoupon(Coupon coupon) {
@@ -32,11 +38,18 @@ public class CompanyFacade implements CouponClientFacade {
 	}// get coupon
 	
 	public Collection<Coupon> getAllCoupons(){
-		return _couponDAO.getAllCompanyCoupons(id);
+		return _couponDAO.getAllCompanyCoupons(_currentCompany.getId());
 	}// get all coupons
 	
 	public Collection<Coupon> getCouponByType(CouponType type){
-		return _couponDAO.getCouponByType(type);
+		Collection<Coupon> couponsByType = null;
+		Collection<Coupon> allCoupons = getAllCoupons();
+		for(Coupon curr: allCoupons) {
+			if(curr.get_type() == type) {
+				couponsByType.add(curr);
+			}
+		}
+		return couponsByType;
 	}// get coupons by type
 	
 	public void createCoupon(Coupon coupon) {

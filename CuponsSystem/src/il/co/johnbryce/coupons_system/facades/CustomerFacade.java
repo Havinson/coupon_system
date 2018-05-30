@@ -20,7 +20,7 @@ public class CustomerFacade implements CouponClientFacade {
 		_customerDao = new CustomerDBDAO();
 	}// c-tor
 	@Override
-	public CustomerFacade login(String userName, String password, ClientType type) {
+	public CouponClientFacade login(String userName, String password, ClientType type) {
 		CustomerFacade ret = null;
 		if(_customerDao.login(userName, password)) {
 			ret = this;

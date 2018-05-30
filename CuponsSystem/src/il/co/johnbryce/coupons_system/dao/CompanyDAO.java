@@ -13,4 +13,5 @@ public interface CompanyDAO {
 	public Collection<Company> getAllCompanies();
 	public Collection<Coupon> getCuopons(Company comp);
 	public boolean login(String companyName, String password);
+	public Company getLoggedInCompany(String companyName, String password);
 }// company DAO

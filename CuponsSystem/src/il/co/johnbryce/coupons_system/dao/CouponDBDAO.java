@@ -260,4 +260,5 @@ public class CouponDBDAO implements CouponDAO {
 
 		return coupons;
 	}// get all company coupons
+
 }// Coupon DBDAO
