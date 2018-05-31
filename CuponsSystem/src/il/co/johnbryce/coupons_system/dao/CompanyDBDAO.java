@@ -180,23 +180,26 @@ public class CompanyDBDAO implements CompanyDAO {
 		Connection conn = null;
 		try {
 			conn = _pool.getConnection();
-			prepStm = conn.prepareStatement("select * from Company where CompanyName = ?, password = ?;");
+			prepStm = conn.prepareStatement("select * from Company where CompanyName = ? and Password = ?;");
 			prepStm.setString(1, companyName);
 			prepStm.setString(2, password);
 			resultSet = prepStm.executeQuery();
 			if (resultSet.next()) {
 				_currentCompany = new Company(resultSet.getLong("ID"), resultSet.getString("CompanyName"),
 						resultSet.getString("Password"), resultSet.getString("Email"));
+				ret = true;
 			}else {
 				System.out.println("username or password are not correct!");
 			}
 			_pool.returnConnection(conn);
 		} catch (SQLException e) {
+			e.printStackTrace();
 //			TODO: take care of SQLexception
 		} catch (Exception e) {
+			e.printStackTrace();
 //			TODO: take care of Exception
 		}
-		return ret;
+		{ return ret;}
 	}// login
 
 	@Override

@@ -179,21 +179,21 @@ public class CustomerDBDAO implements CustomerDAO {
 		boolean ret = false;
 		try {
 			conn = _pool.getConnection();
-			prepStm = conn.prepareStatement("select CustomerName, Password from Customer");
+			prepStm = conn.prepareStatement("select * from Customer where CustomerName = ? and Password = ?;");
+			prepStm.setString(1, customerName);
+			prepStm.setString(2, password);
 			resultSet = prepStm.executeQuery();
-			while (resultSet.next()) {
-				if (customerName == resultSet.getString("CustomerName")
-						&& password == resultSet.getString("Password")) {
-					ret = true;
-					_currentCustomer = new Customer(resultSet.getLong("ID"), resultSet.getString("CustomerName"),
+			if (resultSet.next()) {
+				ret = true;
+				_currentCustomer = new Customer(resultSet.getLong("ID"), resultSet.getString("CustomerName"),
 							resultSet.getString("Password"));
-					break;
 				}
-			}
 			_pool.returnConnection(conn);
 		} catch (SQLException e) {
+			e.printStackTrace();
 			// TODO: Take care of exception
 		} catch (Exception e) {
+			e.printStackTrace();
 			// TODO: Take care of exception
 		}
 		return ret;
