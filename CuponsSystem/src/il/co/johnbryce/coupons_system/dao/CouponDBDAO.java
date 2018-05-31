@@ -261,4 +261,22 @@ public class CouponDBDAO implements CouponDAO {
 		return coupons;
 	}// get all company coupons
 
+	@Override
+	public void couponExpirationTask() {
+		List<Coupon> coupons = new ArrayList<>();
+		PreparedStatement stm;
+		ResultSet resultSet;
+		Connection conn = null;
+		try {
+			conn = _pool.getConnection();
+			stm = conn.prepareStatement("select ID from Coupons where EndDate <= ?");
+			
+			_pool.returnConnection(conn);
+		}catch (SQLException e) {
+//			TODO: take care of exception
+		}catch (Exception e) {
+//			TODO: take care of exception
+		}
+	}// coupon expiration task
+
 }// Coupon DBDAO
