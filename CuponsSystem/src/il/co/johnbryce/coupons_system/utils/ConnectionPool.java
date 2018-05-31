@@ -20,6 +20,7 @@ public class ConnectionPool {
 						"jdbc:mysql://localhost:3306/CouponDB?useSSL=false","igor","pretender1988"));
 			}
 		}catch (Exception e) {
+			e.printStackTrace();
 			//TODO: Take care of Exception, what exactly an exception
 		}
 	}//c-tor
@@ -31,7 +32,8 @@ public class ConnectionPool {
 	public Connection getConnection() throws Exception {//TODO: What exactly an exception
 			if (_connection.iterator().hasNext() == false) {
 				this.wait();
-			}return _connection.iterator().next();
+			}
+	return _connection.iterator().next();
 	}//getConnetion
 	
 	public void returnConnection(Connection conn) {

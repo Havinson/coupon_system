@@ -12,8 +12,7 @@ public class DailyCouponExpirationTask implements Runnable {
 	
 	@Override
 	public void run() {
-		// TODO Auto-generated method stub
+		_couponDao.couponExpirationTask();
+	}// run
 
-	}
-
-}
+}// DailyCouponExpirationTask

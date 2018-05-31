@@ -267,14 +267,23 @@ public class CouponDBDAO implements CouponDAO {
 		PreparedStatement stm;
 		ResultSet resultSet;
 		Connection conn = null;
+		long[] expiredCoupons = {};
+		int counter = 0;
 		try {
 			conn = _pool.getConnection();
-			stm = conn.prepareStatement("select ID from Coupons where EndDate <= ?");
-			
+			stm = conn.prepareStatement("select ID from Coupon where EndDate <= now()");
+			resultSet = stm.executeQuery();		
+			while(resultSet.next()) {
+				expiredCoupons[counter++] = resultSet.getLong("ID");
+				
+			}
+			System.out.println(expiredCoupons.length);
 			_pool.returnConnection(conn);
 		}catch (SQLException e) {
+			e.printStackTrace();
 //			TODO: take care of exception
 		}catch (Exception e) {
+			e.printStackTrace();
 //			TODO: take care of exception
 		}
 	}// coupon expiration task
