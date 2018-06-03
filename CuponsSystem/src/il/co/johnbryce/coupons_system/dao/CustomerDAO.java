@@ -3,7 +3,6 @@ package il.co.johnbryce.coupons_system.dao;
 import java.util.Collection;
 
 import il.co.johnbryce.coupons_system.javabeans.Coupon;
-import il.co.johnbryce.coupons_system.javabeans.CouponType;
 import il.co.johnbryce.coupons_system.javabeans.Customer;
 
 public interface CustomerDAO {

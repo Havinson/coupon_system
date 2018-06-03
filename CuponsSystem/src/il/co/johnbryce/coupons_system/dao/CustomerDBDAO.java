@@ -10,7 +10,6 @@ import java.util.Collection;
 import java.util.List;
 
 import il.co.johnbryce.coupons_system.javabeans.Coupon;
-import il.co.johnbryce.coupons_system.javabeans.CouponType;
 import il.co.johnbryce.coupons_system.javabeans.Customer;
 import il.co.johnbryce.coupons_system.utils.ConnectionPool;
 
