@@ -248,10 +248,11 @@ public class CouponDBDAO implements CouponDAO {
 			stm.setLong(1, companyId);
 			resultSet = stm.executeQuery();
 			while (resultSet.next()) {
-				coupons.add(this.getCoupon(resultSet.getLong("ID")));
+				coupons.add(this.getCoupon(resultSet.getLong("Coupon_ID")));
 			}
 			_pool.returnConnection(conn);
 		} catch (SQLException e) {
+			e.printStackTrace();
 			System.out.println("You have trouble with connection to database.");
 			System.out.println("Please, check your connection.");
 		} catch (Exception e) {
@@ -267,10 +268,39 @@ public class CouponDBDAO implements CouponDAO {
 		Connection conn = null;
 		try {
 			conn = _pool.getConnection();
-			stm = conn.prepareStatement("insert into Company_Coupon (CouponID, CompanyID) values (?, ?);");
-			
+			stm = conn.prepareStatement("insert into CompanyCoupon (Coupon_ID, Company_ID) values (?, ?);");
+			stm.setLong(1, coupon.get_id());
+			stm.setLong(2, companyId);
+			stm.executeUpdate();
 			_pool.returnConnection(conn);
+		}catch(SQLException e) {
+			e.printStackTrace();
+//			TODO: Take care of exception
+		}catch(Exception e) {
+			e.printStackTrace();
+//			Take care of exception
 		}
 	}// addCouponAndCompanyJoin
+
+	@Override
+	public void removeCouponAndCompanyJoin(Coupon coupon, long companyId) {
+		PreparedStatement stm;
+		ResultSet resultSet;
+		Connection conn = null;
+		try {
+			conn = _pool.getConnection();
+			stm = conn.prepareStatement("delete from CompanyCoupon where Coupon_ID = ? and Company_ID = ?;");
+			stm.setLong(1, coupon.get_id());
+			stm.setLong(2, companyId);
+			stm.executeUpdate();
+			_pool.returnConnection(conn);
+		}catch(SQLException e) {
+			e.printStackTrace();
+//			TODO: Take care of exception
+		}catch(Exception e) {
+			e.printStackTrace();
+//			Take care of exception
+		}
+	}// removeCouponAndCompanyJoin
 
 }// Coupon DBDAO

@@ -16,4 +16,6 @@ public interface CouponDAO {
 	public Collection<Coupon> getCouponByType(CouponType type);
 	public boolean checkCouponExisting(Coupon coupon, Customer customer);
 	public int checkCouponAmount(Coupon coupon);
+	public void addCouponAndCompanyJoin(Coupon coupon, long companyId);
+	public void removeCouponAndCompanyJoin(Coupon coupon, long companyId);
 }// Coupon DAO

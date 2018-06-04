@@ -19,17 +19,20 @@ import il.co.johnbryce.coupons_system.utils.DailyCouponExpirationTask;
 public class test {
 
 	public static void main(String[] args) {
-		CouponClientFacade admin = (AdminFacade)CouponSystem.getCouponSystem().login("Admin", "12345", ClientType.ADMIN);
+//		CouponClientFacade admin = (AdminFacade)CouponSystem.getCouponSystem().login("Admin", "12345", ClientType.ADMIN);
 		Company company = new Company(12345, "Global Travels", "1215", "mail@GlobalTravels.com");
-		((AdminFacade)admin).createCompany(company);
+//		((AdminFacade)admin).createCompany(company);
 	
-
+//
 		CompanyFacade globalTravels = (CompanyFacade) CouponSystem.getCouponSystem().login("Global Travels", "1215",
 				ClientType.COMPANY);
-		Coupon coupon = new Coupon(1, "Vocation in peru", new Date(2015 - 03 - 12), new Date(2018 - 9 - 12), 45,
-				CouponType.TRAVELLING.name(), "Some message", 23.5, "url to image");
-		globalTravels.createCoupon(coupon);
-		
+//		Coupon coupon = new Coupon(1, "Vocation in peru", new Date(2015 - 03 - 12), new Date(2018 - 9 - 12), 45,
+//				CouponType.TRAVELLING.name(), "Some message", 23.5, "url to image");
+//		globalTravels.createCoupon(coupon);
+//		
+		for(Coupon curr: globalTravels.getAllCoupons()) {
+			globalTravels.removeCoupon(curr);
+		}
 		System.out.println(globalTravels.getAllCoupons().size());
 	}
 

@@ -37,7 +37,8 @@ public class CompanyFacade implements CouponClientFacade {
 	
 	public void removeCoupon(Coupon coupon) {
 		_couponDAO.removeCoupon(coupon);
-	}
+		_couponDAO.removeCouponAndCompanyJoin(coupon, _currentCompany.getId());
+	}//removeCoupon
 	public Coupon getCoupon(long id) {
 		return _couponDAO.getCoupon(id);
 	}// get coupon
@@ -59,5 +60,6 @@ public class CompanyFacade implements CouponClientFacade {
 	
 	public void createCoupon(Coupon coupon) {
 		_couponDAO.createCoupon(coupon);
+		_couponDAO.addCouponAndCompanyJoin(coupon, _currentCompany.getId());
 	}//create coupon
 }// Company facade
