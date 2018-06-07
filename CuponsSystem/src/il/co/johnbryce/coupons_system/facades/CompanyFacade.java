@@ -1,5 +1,6 @@
 package il.co.johnbryce.coupons_system.facades;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import il.co.johnbryce.coupons_system.dao.CompanyDAO;
@@ -44,11 +45,11 @@ public class CompanyFacade implements CouponClientFacade {
 	}// get coupon
 	
 	public Collection<Coupon> getAllCoupons(){
-		return _couponDAO.getAllCompanyCoupons(_currentCompany.getId());
+		return _companyDao.getCuopons(_currentCompany);
 	}// get all coupons
 	
 	public Collection<Coupon> getCouponByType(CouponType type){
-		Collection<Coupon> couponsByType = null;
+		Collection<Coupon> couponsByType = new ArrayList<>();
 		Collection<Coupon> allCoupons = getAllCoupons();
 		for(Coupon curr: allCoupons) {
 			if(curr.get_type() == type) {

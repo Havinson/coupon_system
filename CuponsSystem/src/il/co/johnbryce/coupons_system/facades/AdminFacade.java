@@ -4,26 +4,34 @@ import java.util.Collection;
 
 import il.co.johnbryce.coupons_system.dao.CompanyDAO;
 import il.co.johnbryce.coupons_system.dao.CompanyDBDAO;
-import il.co.johnbryce.coupons_system.dao.CouponDAO;
-import il.co.johnbryce.coupons_system.dao.CouponDBDAO;
 import il.co.johnbryce.coupons_system.dao.CustomerDAO;
 import il.co.johnbryce.coupons_system.dao.CustomerDBDAO;
 import il.co.johnbryce.coupons_system.javabeans.Company;
 import il.co.johnbryce.coupons_system.javabeans.Customer;
-
+/** 
+ * @author igor
+ *	
+ */
 public class AdminFacade implements CouponClientFacade {
 	private CompanyDAO _companies;
-	private CouponDAO _coupons;
 	private CustomerDAO _customers;
 	
-	
+	/**
+	 * Class constructor
+	 * 
+	 */
 	public AdminFacade() {
 		_companies = new CompanyDBDAO();
-		_coupons = new CouponDBDAO();
 		_customers = new CustomerDBDAO();
 	}// c-tor
 	
 	@Override
+	/**
+	 * @param Strign user name
+	 * @param String password
+	 * @param ClientType type of client
+	 * @return CouponClientFacade
+	 */
 	public CouponClientFacade login(String userName, String password, ClientType type) {
 		AdminFacade ret = null;
 		if(userName == "Admin" && password == "12345") {
@@ -31,7 +39,10 @@ public class AdminFacade implements CouponClientFacade {
 		}
 		return ret;
 	}// login
-
+	/**
+	 * 
+	 * @param company
+	 */
 	public void createCompany(Company company) {
 		_companies.createCompany(company);
 	}// create company

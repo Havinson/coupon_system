@@ -1,7 +1,5 @@
 package il.co.johnbryce.coupons_system.facades;
 
-import il.co.johnbryce.coupons_system.dao.CompanyDBDAO;
-
 public class CouponSystem {
 	private static CouponSystem _instance = new CouponSystem();
 	
@@ -30,7 +28,7 @@ public class CouponSystem {
 			System.out.println("The client is not exist!");
 			break;
 		}
-		return client;
+		return client.login(userName, password, type);
 	}// login
 	
 	public void shutdown() {

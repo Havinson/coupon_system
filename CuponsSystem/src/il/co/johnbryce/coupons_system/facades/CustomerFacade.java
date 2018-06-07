@@ -1,5 +1,6 @@
 package il.co.johnbryce.coupons_system.facades;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import il.co.johnbryce.coupons_system.dao.CouponDAO;
@@ -11,12 +12,12 @@ import il.co.johnbryce.coupons_system.javabeans.CouponType;
 import il.co.johnbryce.coupons_system.javabeans.Customer;
 
 public class CustomerFacade implements CouponClientFacade {
-	private CouponDAO _coupons;
+	private CouponDAO _couponDao;
 	private CustomerDAO _customerDao;
 	private Customer _currentCustomer;
 	
 	public CustomerFacade() {
-		_coupons = new CouponDBDAO();
+		_couponDao = new CouponDBDAO();
 		_customerDao = new CustomerDBDAO();
 	}// c-tor
 	@Override
@@ -24,15 +25,18 @@ public class CustomerFacade implements CouponClientFacade {
 		CustomerFacade ret = null;
 		if(_customerDao.login(userName, password)) {
 			ret = this;
+			_currentCustomer = _customerDao.getLoggedInCustomer(userName, password);
+
 		};
-		_currentCustomer = _customerDao.getLoggedInCustomer(userName, password);
 		return ret;
 		
 	}// login
 	
 	public void purchaseCoupon(Coupon coupon) {
-		if (_coupons.checkCouponExisting(coupon, _currentCustomer) && _coupons.checkCouponAmount(coupon) != 0) {
-			_coupons.getCoupon(coupon.get_id()).set_amount(-1);
+		if (_couponDao.checkCouponExisting(coupon, _currentCustomer) != true && _couponDao.checkCouponAmount(coupon) != 0) {
+			_couponDao.getCoupon(coupon.get_id()).set_amount(-1);
+			_customerDao.addToCustomerCoupon(_currentCustomer, coupon);
+			
 		};
 	}// purchase Coupon
 	
@@ -43,7 +47,7 @@ public class CustomerFacade implements CouponClientFacade {
 	
 	public Collection<Coupon> getAllPurchasedCouponsByType(CouponType type){
 		Collection<Coupon> allCoupons = getAllPurchasedCoupons();
-		Collection<Coupon> couponsByType = null;
+		Collection<Coupon> couponsByType = new ArrayList<>();
 		while(allCoupons.iterator().hasNext()) {
 			Coupon curr = allCoupons.iterator().next();
 			if(curr.get_type() == type) {
@@ -55,7 +59,7 @@ public class CustomerFacade implements CouponClientFacade {
 	
 	public Collection<Coupon> getAllPurchasedCouponsByPrice(double price){
 		Collection<Coupon> allCoupons = getAllPurchasedCoupons();
-		Collection<Coupon> couponsByPrice = null;
+		Collection<Coupon> couponsByPrice = new ArrayList<>();
 		while(allCoupons.iterator().hasNext()) {
 			Coupon curr = allCoupons.iterator().next();
 			if(curr.get_price() == price) {

@@ -264,7 +264,6 @@ public class CouponDBDAO implements CouponDAO {
 	
 	public void addCouponAndCompanyJoin(Coupon coupon, long companyId) {
 		PreparedStatement stm;
-		ResultSet resultSet;
 		Connection conn = null;
 		try {
 			conn = _pool.getConnection();
@@ -285,7 +284,6 @@ public class CouponDBDAO implements CouponDAO {
 	@Override
 	public void removeCouponAndCompanyJoin(Coupon coupon, long companyId) {
 		PreparedStatement stm;
-		ResultSet resultSet;
 		Connection conn = null;
 		try {
 			conn = _pool.getConnection();

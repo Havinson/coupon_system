@@ -15,7 +15,6 @@ import il.co.johnbryce.coupons_system.utils.ConnectionPool;
 
 public class CustomerDBDAO implements CustomerDAO {
 	private ConnectionPool _pool;
-	private Customer _currentCustomer;
 
 	public CustomerDBDAO() {
 		_pool = ConnectionPool.getConnectionPool();
@@ -184,8 +183,6 @@ public class CustomerDBDAO implements CustomerDAO {
 			resultSet = prepStm.executeQuery();
 			if (resultSet.next()) {
 				ret = true;
-				_currentCustomer = new Customer(resultSet.getLong("ID"), resultSet.getString("CustomerName"),
-							resultSet.getString("Password"));
 				}
 			_pool.returnConnection(conn);
 		} catch (SQLException e) {
@@ -220,6 +217,21 @@ public class CustomerDBDAO implements CustomerDAO {
 		}
 		return customer;
 	}// get logged in customer
-
-
+	
+	public void addToCustomerCoupon(Customer customer, Coupon coupon) {
+		PreparedStatement stm;
+		Connection conn;
+		try {
+			conn = _pool.getConnection();
+			stm = conn.prepareStatement("insert into CustomerCuopon (Customer_ID, Coupon_ID) values (?, ?)");
+			stm.setLong(1, customer.getId());
+			stm.setLong(2, coupon.get_id());
+			stm.executeUpdate();
+			_pool.returnConnection(conn);
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	}// addToCustomerCoupon
 }// Customer DBDAO
