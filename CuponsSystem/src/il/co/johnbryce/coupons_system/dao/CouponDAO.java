@@ -9,7 +9,7 @@ import il.co.johnbryce.coupons_system.javabeans.Customer;
 public interface CouponDAO {
 	/**
 	 * A method add new coupon to the database
-	 * @param Coupon coupon
+	 * @param Coupon coupon 
 	 */
 	public void createCoupon(Coupon coupon);
 	/**
@@ -65,4 +65,5 @@ public interface CouponDAO {
 	 */
 	public void addCouponAndCompanyJoin(Coupon coupon, long companyId);
 	public void removeCouponAndCompanyJoin(Coupon coupon, long companyId);
+	public boolean checkCompanyCouponExisting(Coupon coupon, long companyId);
 }// Coupon DAO

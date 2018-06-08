@@ -15,7 +15,6 @@ import il.co.johnbryce.coupons_system.utils.ConnectionPool;
 
 public class CompanyDBDAO implements CompanyDAO {
 	private ConnectionPool _pool;
-	private Company _currentCompany;
 
 	public CompanyDBDAO() {
 		_pool = ConnectionPool.getConnectionPool();
@@ -89,35 +88,32 @@ public class CompanyDBDAO implements CompanyDAO {
 			System.out.println("Or you have trouble with connection to database.");
 			System.out.println("Please, check you company ID and your`s connection.");
 		} catch (Exception e) {
-			System.out.println("It`s not SQL server problem, please turn to your administrtor.");
+			System.out.println("Company update failed! Please turn to your administrtor.");
 			// TODO: take care of exception
 		}
 	}// update company
 
 	@Override
 	public Company getCompany(long id) {
-		Company comp = null;
+		Company company = null;
 		PreparedStatement prepStm = null;
 		ResultSet resultSet = null;
 		Connection conn = null;
 		try {
 			conn = _pool.getConnection();
-			prepStm = conn.prepareStatement("SELECT * FROM Company WHERE ID =?");
+			prepStm = conn.prepareStatement("SELECT * FROM Company WHERE ID = ?;");
 			prepStm.setLong(1, id);
 			resultSet = prepStm.executeQuery();
 			resultSet.next();
-			comp = new Company(resultSet.getLong("CompanyID"), resultSet.getString("CompanyName"),
+			company = new Company(resultSet.getLong("ID"), resultSet.getString("CompanyName"),
 					resultSet.getString("Password"), resultSet.getString("Email"));
 			_pool.returnConnection(conn);
 		} catch (SQLException e) {
-			System.out.println("A company whith this ID is not exist!");
-			System.out.println("Maybe the company is not exist in the database.");
-			System.out.println("Or you have trouble with connection to database.");
-			System.out.println("Please, check you company ID and your`s connection.");
+			e.printStackTrace();
 		} catch (Exception e) {
-			System.out.println("It`s not SQL server problem, please torn to administrator!");
+			e.printStackTrace();
 		}
-		return comp;
+		return company;
 	}// get company
 
 	@Override
@@ -130,7 +126,7 @@ public class CompanyDBDAO implements CompanyDAO {
 		try {
 			conn = _pool.getConnection();
 			stm = conn.createStatement();
-			resultSet = stm.executeQuery("SELECT ID FROM Company");
+			resultSet = stm.executeQuery("SELECT ID FROM Company;");
 			while (resultSet.next()) {
 				companies.add(this.getCompany(resultSet.getLong("ID")));
 			}
@@ -145,7 +141,7 @@ public class CompanyDBDAO implements CompanyDAO {
 	}// get companies
 
 	@Override
-	public Collection<Coupon> getCuopons(Company comp) {
+	public Collection<Coupon> getCuopons(Company company) {
 		List<Coupon> coupons = new ArrayList<>();
 		PreparedStatement prepStm = null;
 		ResultSet resultSet;
@@ -155,7 +151,7 @@ public class CompanyDBDAO implements CompanyDAO {
 		try {
 			conn = _pool.getConnection();
 			prepStm = conn.prepareStatement("SELECT Coupon_ID FROM CompanyCoupon WHERE Company_ID = ?");
-			prepStm.setLong(1, comp.getId());
+			prepStm.setLong(1, company.getId());
 			resultSet = prepStm.executeQuery();
 			while (resultSet.next()) {
 				coupons.add(couponDb.getCoupon(resultSet.getLong("ID")));
@@ -175,38 +171,26 @@ public class CompanyDBDAO implements CompanyDAO {
 	@Override
 	public boolean login(String companyName, String password) {
 		boolean ret = false;
-		PreparedStatement prepStm = null;
-		ResultSet resultSet;
-		Connection conn = null;
-		try {
-			conn = _pool.getConnection();
-			prepStm = conn.prepareStatement("select * from Company where CompanyName = ? and Password = ?;");
-			prepStm.setString(1, companyName);
-			prepStm.setString(2, password);
-			resultSet = prepStm.executeQuery();
-			if (resultSet.next()) {
-				_currentCompany = new Company(resultSet.getLong("ID"), resultSet.getString("CompanyName"),
-						resultSet.getString("Password"), resultSet.getString("Email"));
+		List<Company> allCompanies = (ArrayList<Company>)getAllCompanies();
+		for(Company curr: allCompanies) {
+			if((curr.getCompanyName().equals(companyName) && (curr.getPassword().equals(password)))) {
 				ret = true;
-			}else {
-				System.out.println("username or password are not correct!");
 			}
-			_pool.returnConnection(conn);
-		} catch (SQLException e) {
-			e.printStackTrace();
-//			TODO: take care of SQLexception
-		} catch (Exception e) {
-			e.printStackTrace();
-//			TODO: take care of Exception
 		}
-		{ return ret;}
+		return ret;
 	}// login
 
 	@Override
-	public Company getLoggedInCompany(String companyName, String password) {
-		if(login(companyName, password)) {
-			return _currentCompany;
+	public Company getCompanyByLogin(String companyName, String password) {
+		Company ret = null;
+		List<Company> allCompanies = (ArrayList<Company>)getAllCompanies();
+		for(Company curr: allCompanies) {
+			if(login(companyName, password)) {
+				ret = curr;
+			}else {
+				System.out.println("user name or password is incorrect!");
+			}
 		}
-		return null;
+		return ret;
 	}// get logged in company
 }// Company DB DAO

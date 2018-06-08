@@ -300,5 +300,33 @@ public class CouponDBDAO implements CouponDAO {
 //			Take care of exception
 		}
 	}// removeCouponAndCompanyJoin
-
+	/**
+	 * Returns true if coupon not exist in this company
+	 * Returns false if coupon already exist in this company
+	 * @param Coupon object
+	 * @param long company ID
+	 */
+	public boolean checkCompanyCouponExisting(Coupon coupon, long companyId) {
+		boolean ret = true;
+		Connection conn;
+		ResultSet resultSet;
+		PreparedStatement prepStm;
+		try {
+			conn = _pool.getConnection();
+			prepStm = conn.prepareStatement("select Coupon_ID from CompanyCoupon where Company_ID = ?;");
+			prepStm.setLong(1, companyId);
+			resultSet = prepStm.executeQuery();
+			while(resultSet.next()) {
+				if (coupon.get_id() == resultSet.getLong("Coupon_ID")) {
+					ret = false;
+				}
+			}
+			_pool.returnConnection(conn);
+		}catch (SQLException e) {
+			e.printStackTrace();
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		return ret;
+	}
 }// Coupon DBDAO

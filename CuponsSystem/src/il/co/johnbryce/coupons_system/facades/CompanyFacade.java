@@ -7,6 +7,8 @@ import il.co.johnbryce.coupons_system.dao.CompanyDAO;
 import il.co.johnbryce.coupons_system.dao.CompanyDBDAO;
 import il.co.johnbryce.coupons_system.dao.CouponDAO;
 import il.co.johnbryce.coupons_system.dao.CouponDBDAO;
+import il.co.johnbryce.coupons_system.exceptions.ClientNotFoundException;
+import il.co.johnbryce.coupons_system.exceptions.CouponAlreadyExistException;
 import il.co.johnbryce.coupons_system.javabeans.Company;
 import il.co.johnbryce.coupons_system.javabeans.Coupon;
 import il.co.johnbryce.coupons_system.javabeans.CouponType;
@@ -21,13 +23,14 @@ public class CompanyFacade implements CouponClientFacade {
 		_companyDao = new CompanyDBDAO();
 	}// c-tor
 	@Override
-	public CouponClientFacade login(String userName, String password, ClientType type) {
+	public CompanyFacade login(String userName, String password, ClientType type) throws ClientNotFoundException{
 		CompanyFacade ret = null;
 		if(_companyDao.login(userName, password)) {
+			_currentCompany = _companyDao.getCompanyByLogin(userName, password);
 			ret = this;
-			_currentCompany = _companyDao.getLoggedInCompany(userName, password);
+
 		}else {
-			System.out.println("The company is not exist!");
+			throw new ClientNotFoundException("user name or password is incorrect!");
 		}
 		return ret;
 	}//login
@@ -59,8 +62,12 @@ public class CompanyFacade implements CouponClientFacade {
 		return couponsByType;
 	}// get coupons by type
 	
-	public void createCoupon(Coupon coupon) {
+	public void createCoupon(Coupon coupon) throws CouponAlreadyExistException{
+		if(_couponDAO.checkCompanyCouponExisting(coupon, _currentCompany.getId())) {
 		_couponDAO.createCoupon(coupon);
 		_couponDAO.addCouponAndCompanyJoin(coupon, _currentCompany.getId());
+		}else {
+			throw new CouponAlreadyExistException("The coupon already exist!");
+		}
 	}//create coupon
 }// Company facade

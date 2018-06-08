@@ -2,6 +2,7 @@ package il.co.johnbryce.coupons_system.dao;
 
 import java.util.Collection;
 
+import il.co.johnbryce.coupons_system.exceptions.CompanyNotFoundException;
 import il.co.johnbryce.coupons_system.javabeans.Company;
 import il.co.johnbryce.coupons_system.javabeans.Coupon;
 
@@ -50,6 +51,7 @@ public interface CompanyDAO {
 	 * @param String companyName
 	 * @param String password
 	 * @return Company
+	 * @throws CompanyNotFoundException 
 	 */
-	public Company getLoggedInCompany(String companyName, String password);
+	public Company getCompanyByLogin(String companyName, String password);
 }// company DAO

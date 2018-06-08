@@ -1,5 +1,7 @@
 package il.co.johnbryce.coupons_system.facades;
 
+import il.co.johnbryce.coupons_system.exceptions.ClientNotFoundException;
+
 public class CouponSystem {
 	private static CouponSystem _instance = new CouponSystem();
 	
@@ -11,7 +13,7 @@ public class CouponSystem {
 		return _instance;
 	}// get instance
 	
-	public CouponClientFacade login(String userName, String password, ClientType type) {
+	public CouponClientFacade login(String userName, String password, ClientType type) throws ClientNotFoundException {
 		CouponClientFacade client;
 		switch (type) {
 		case ADMIN:
@@ -28,7 +30,7 @@ public class CouponSystem {
 			System.out.println("The client is not exist!");
 			break;
 		}
-		return client.login(userName, password, type);
+		return client;
 	}// login
 	
 	public void shutdown() {

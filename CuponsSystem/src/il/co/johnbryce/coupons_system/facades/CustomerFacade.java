@@ -7,6 +7,7 @@ import il.co.johnbryce.coupons_system.dao.CouponDAO;
 import il.co.johnbryce.coupons_system.dao.CouponDBDAO;
 import il.co.johnbryce.coupons_system.dao.CustomerDAO;
 import il.co.johnbryce.coupons_system.dao.CustomerDBDAO;
+import il.co.johnbryce.coupons_system.exceptions.ClientNotFoundException;
 import il.co.johnbryce.coupons_system.javabeans.Coupon;
 import il.co.johnbryce.coupons_system.javabeans.CouponType;
 import il.co.johnbryce.coupons_system.javabeans.Customer;
@@ -21,12 +22,13 @@ public class CustomerFacade implements CouponClientFacade {
 		_customerDao = new CustomerDBDAO();
 	}// c-tor
 	@Override
-	public CouponClientFacade login(String userName, String password, ClientType type) {
+	public CustomerFacade login(String userName, String password, ClientType type) throws ClientNotFoundException {
 		CustomerFacade ret = null;
 		if(_customerDao.login(userName, password)) {
 			ret = this;
 			_currentCustomer = _customerDao.getLoggedInCustomer(userName, password);
-
+		}else{
+			throw new ClientNotFoundException("user name or password is incorrect!");
 		};
 		return ret;
 		
