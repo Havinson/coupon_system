@@ -26,7 +26,7 @@ public class CustomerFacade implements CouponClientFacade {
 		CustomerFacade ret = null;
 		if(_customerDao.login(userName, password)) {
 			ret = this;
-			_currentCustomer = _customerDao.getLoggedInCustomer(userName, password);
+			_currentCustomer = _customerDao.getCustomerByLogin(userName, password);
 		}else{
 			throw new ClientNotFoundException("user name or password is incorrect!");
 		};
@@ -50,9 +50,8 @@ public class CustomerFacade implements CouponClientFacade {
 	public Collection<Coupon> getAllPurchasedCouponsByType(CouponType type){
 		Collection<Coupon> allCoupons = getAllPurchasedCoupons();
 		Collection<Coupon> couponsByType = new ArrayList<>();
-		while(allCoupons.iterator().hasNext()) {
-			Coupon curr = allCoupons.iterator().next();
-			if(curr.get_type() == type) {
+		for(Coupon curr: allCoupons) {
+			if(curr.get_type()==type) {
 				couponsByType.add(curr);
 			}
 		}
@@ -62,9 +61,8 @@ public class CustomerFacade implements CouponClientFacade {
 	public Collection<Coupon> getAllPurchasedCouponsByPrice(double price){
 		Collection<Coupon> allCoupons = getAllPurchasedCoupons();
 		Collection<Coupon> couponsByPrice = new ArrayList<>();
-		while(allCoupons.iterator().hasNext()) {
-			Coupon curr = allCoupons.iterator().next();
-			if(curr.get_price() == price) {
+		for(Coupon curr: allCoupons) {
+			if(curr.get_price()==price) {
 				couponsByPrice.add(curr);
 			}
 		}

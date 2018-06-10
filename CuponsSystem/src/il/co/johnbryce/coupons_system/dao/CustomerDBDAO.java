@@ -196,7 +196,7 @@ public class CustomerDBDAO implements CustomerDAO {
 	}// login
 
 	@Override
-	public Customer getLoggedInCustomer(String customerName, String password) {
+	public Customer getCustomerByLogin(String customerName, String password) {
 		PreparedStatement prepStm;
 		ResultSet resultSet;
 		Connection conn;
