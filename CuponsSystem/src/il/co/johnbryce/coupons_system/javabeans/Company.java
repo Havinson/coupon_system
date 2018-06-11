@@ -47,7 +47,7 @@ public class Company {
 
 	@Override
 	public String toString() {
-		return _companyName + _id;
+		return _id + " " + _companyName;
 	}// to String
 	
 	

@@ -328,5 +328,5 @@ public class CouponDBDAO implements CouponDAO {
 			e.printStackTrace();
 		}
 		return ret;
-	}
+	}// checkCompanyCouponExisting
 }// Coupon DBDAO

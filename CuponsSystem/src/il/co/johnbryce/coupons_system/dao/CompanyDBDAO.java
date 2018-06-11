@@ -35,10 +35,7 @@ public class CompanyDBDAO implements CompanyDAO {
 			prepStm.executeUpdate();
 			_pool.returnConnection(conn);
 		} catch (SQLException e) {
-			System.out.println("A company was no created!");
-			System.out.println("Maybe this company already exist in database,");
-			System.out.println("or You have trouble whith connection to sql server.");
-			System.out.println("Please check if a company is exist or not.");
+			e.printStackTrace();
 		} catch (Exception e) {
 			// TODO take care for exception
 			e.printStackTrace();
@@ -57,11 +54,9 @@ public class CompanyDBDAO implements CompanyDAO {
 			prepStm.executeUpdate();
 			_pool.returnConnection(conn);
 		} catch (SQLException e) {
-			System.out.println("A company has not been deleted!");
-			System.out.println("Maybe the company is not exist in the database.");
-			System.out.println("Or you have trouble with connection to database.");
-			System.out.println("Please, check you company  ID and your`s connection.");
+			e.printStackTrace();
 		} catch (Exception e) {
+			e.printStackTrace();
 			// TODO: take care of exception
 		}
 	}// remove company
@@ -83,12 +78,8 @@ public class CompanyDBDAO implements CompanyDAO {
 			_pool.returnConnection(conn);
 		} catch (SQLException e) {
 			e.printStackTrace();
-			System.out.println("A company has not been updated!");
-			System.out.println("Maybe a company is not exist in the database.");
-			System.out.println("Or you have trouble with connection to database.");
-			System.out.println("Please, check you company ID and your`s connection.");
 		} catch (Exception e) {
-			System.out.println("Company update failed! Please turn to your administrtor.");
+			e.printStackTrace();
 			// TODO: take care of exception
 		}
 	}// update company
@@ -122,20 +113,18 @@ public class CompanyDBDAO implements CompanyDAO {
 		Statement stm;
 		ResultSet resultSet;
 		Connection conn;
-
 		try {
 			conn = _pool.getConnection();
 			stm = conn.createStatement();
 			resultSet = stm.executeQuery("SELECT ID FROM Company;");
 			while (resultSet.next()) {
-				companies.add(this.getCompany(resultSet.getLong("ID")));
+				companies.add(getCompany(resultSet.getLong("ID")));
 			}
 			_pool.returnConnection(conn);
 		} catch (SQLException e) {
-			System.out.println("You have trouble with connection to database.");
-			System.out.println("Please, check your connection.");
+			e.printStackTrace();
 		} catch (Exception e) {
-			System.out.println("This is not SQL server problem, please torn to administrator");
+			e.printStackTrace();
 		}
 		return companies;
 	}// get companies
@@ -147,7 +136,6 @@ public class CompanyDBDAO implements CompanyDAO {
 		ResultSet resultSet;
 		Connection conn = null;
 		CouponDBDAO couponDb = new CouponDBDAO();
-
 		try {
 			conn = _pool.getConnection();
 			prepStm = conn.prepareStatement("SELECT Coupon_ID FROM CompanyCoupon WHERE Company_ID = ?");
@@ -158,12 +146,9 @@ public class CompanyDBDAO implements CompanyDAO {
 			}
 			_pool.returnConnection(conn);
 		} catch (SQLException e) {
-			System.out.println("The are is no coupons of this company.");
-			System.out.println("Or you have trouble with connection to database.");
-			System.out.println("Please, check you company coupons and your`s connection.");
+			e.printStackTrace();
 		} catch (Exception e) {
-			// TODO: take care of exception
-			System.out.println("This is not SQL server problem, please torn to administrator");
+			e.printStackTrace();
 		}
 		return coupons;
 	}// get coupons
@@ -173,8 +158,10 @@ public class CompanyDBDAO implements CompanyDAO {
 		boolean ret = false;
 		List<Company> allCompanies = (ArrayList<Company>)getAllCompanies();
 		for(Company curr: allCompanies) {
-			if((curr.getCompanyName().equals(companyName) && (curr.getPassword().equals(password)))) {
+			if(curr.getCompanyName().equals(companyName) && curr.getPassword().equals(password)) {
 				ret = true;
+			}else {
+				System.out.println("Login failed! User name or password is incorrect!");
 			}
 		}
 		return ret;
@@ -185,7 +172,7 @@ public class CompanyDBDAO implements CompanyDAO {
 		Company ret = null;
 		List<Company> allCompanies = (ArrayList<Company>)getAllCompanies();
 		for(Company curr: allCompanies) {
-			if(login(companyName, password)) {
+			if(curr.getCompanyName().equals(companyName) && curr.getPassword().equals(password)) {
 				ret = curr;
 			}else {
 				System.out.println("user name or password is incorrect!");

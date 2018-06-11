@@ -171,49 +171,24 @@ public class CustomerDBDAO implements CustomerDAO {
 
 	@Override
 	public boolean login(String customerName, String password) {
-		PreparedStatement prepStm;
-		ResultSet resultSet;
-		Connection conn;
 		boolean ret = false;
-		try {
-			conn = _pool.getConnection();
-			prepStm = conn.prepareStatement("select * from Customer where CustomerName = ? and Password = ?;");
-			prepStm.setString(1, customerName);
-			prepStm.setString(2, password);
-			resultSet = prepStm.executeQuery();
-			if (resultSet.next()) {
+		List<Customer> allCustomers = (ArrayList<Customer>)getAllCustomers();
+		for(Customer curr: allCustomers) {
+			if(curr.getCustomerName().equals(customerName) && curr.getPassword().equals(password)) {
 				ret = true;
-				}
-			_pool.returnConnection(conn);
-		} catch (SQLException e) {
-			e.printStackTrace();
-			// TODO: Take care of exception
-		} catch (Exception e) {
-			e.printStackTrace();
-			// TODO: Take care of exception
+			}
 		}
 		return ret;
 	}// login
 
 	@Override
 	public Customer getCustomerByLogin(String customerName, String password) {
-		PreparedStatement prepStm;
-		ResultSet resultSet;
-		Connection conn;
 		Customer customer = null;
-		try {
-			conn = _pool.getConnection();
-			prepStm = conn.prepareStatement("select ID from Customer where CustomerName = ? , Password = ?;");
-			prepStm.setString(1, customerName);
-			prepStm.setString(2, password);
-			resultSet = prepStm.executeQuery();
-			resultSet.next();
-			customer = new Customer(resultSet.getLong("ID"), customerName, password);
-			_pool.returnConnection(conn);
-		} catch (SQLException e) {
-			// TODO: take care of SQLException
-		} catch (Exception e) {
-			// TODO: take care of SQLException
+		List<Customer> allCustomers = (ArrayList<Customer>)getAllCustomers();
+		for(Customer curr: allCustomers) {
+			if (curr.getCustomerName().equals(customerName) && curr.getPassword().equals(password)) {
+				customer = curr;
+			}
 		}
 		return customer;
 	}// get logged in customer
