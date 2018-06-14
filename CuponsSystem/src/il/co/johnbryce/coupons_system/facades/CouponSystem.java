@@ -1,12 +1,14 @@
 package il.co.johnbryce.coupons_system.facades;
 
 import il.co.johnbryce.coupons_system.exceptions.ClientNotFoundException;
+import il.co.johnbryce.coupons_system.utils.DailyCouponExpirationTask;
 
 public class CouponSystem {
 	private static CouponSystem _instance = new CouponSystem();
 	
 	private CouponSystem() {
-		
+		Thread dailyExpirationTask = new Thread(new DailyCouponExpirationTask());
+		dailyExpirationTask.start();
 	}// c-tor
 	
 	public static CouponSystem getCouponSystem() {
