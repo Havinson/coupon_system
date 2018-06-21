@@ -37,12 +37,12 @@ public class test {
 //
 		CompanyFacade globalTravels;
 		try {
-			globalTravels = (CompanyFacade) CouponSystem.getCouponSystem().login("Global Travels", "1215",
-					ClientType.COMPANY);
+			globalTravels = (CompanyFacade) CouponSystem.getCouponSystem().login("GlobalTravels", "1215", ClientType.COMPANY);
 		} catch (ClientNotFoundException e) {
 			e.printStackTrace();
 			globalTravels = null;
 		}
+		System.out.println(globalTravels);
 //				Coupon coupon = new Coupon(1, "Vocation in peru", new Date(2015 - 03 - 12), new Date(2018 - 9 - 12), 45,
 //				CouponType.TRAVELLING.name(), "Some message", 23.5, "url to image");
 //		try {

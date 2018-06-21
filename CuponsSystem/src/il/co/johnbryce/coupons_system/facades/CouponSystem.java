@@ -19,13 +19,16 @@ public class CouponSystem {
 		CouponClientFacade client;
 		switch (type) {
 		case ADMIN:
-			client = new AdminFacade().login(userName, password, type);
+			client = new AdminFacade();
+			client.login(userName, password, type);
 			break;
 		case COMPANY:
-			client = new CompanyFacade().login(userName, password, type);
+			client = new CompanyFacade();
+			client.login(userName, password, type);
 			break;
 		case CUSTOMER:
-			client = new CustomerFacade().login(userName, password, type);
+			client = new CustomerFacade();
+			client.login(userName, password, type);
 			break;
 		default:
 			client = null;

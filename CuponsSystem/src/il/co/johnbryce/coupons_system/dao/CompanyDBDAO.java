@@ -160,8 +160,6 @@ public class CompanyDBDAO implements CompanyDAO {
 		for(Company curr: allCompanies) {
 			if(curr.getCompanyName().equals(companyName) && curr.getPassword().equals(password)) {
 				ret = true;
-			}else {
-				System.out.println("Login failed! User name or password is incorrect!");
 			}
 		}
 		return ret;
