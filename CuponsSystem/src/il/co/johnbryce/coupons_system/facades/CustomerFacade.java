@@ -35,9 +35,10 @@ public class CustomerFacade implements CouponClientFacade {
 	}// login
 	
 	public void purchaseCoupon(Coupon coupon) {
-		if (_couponDao.checkCouponExisting(coupon, _currentCustomer) != true && _couponDao.checkCouponAmount(coupon) != 0) {
+		if (_couponDao.checkCouponExisting(coupon, _currentCustomer) == false && _couponDao.checkCouponAmount(coupon) > 0) {
 			_couponDao.getCoupon(coupon.get_id()).set_amount(-1);
 			_customerDao.addToCustomerCoupon(_currentCustomer, coupon);
+			_couponDao.updateCoupon(coupon);
 			
 		};
 	}// purchase Coupon

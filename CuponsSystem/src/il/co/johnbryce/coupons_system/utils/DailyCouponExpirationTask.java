@@ -16,7 +16,7 @@ public class DailyCouponExpirationTask implements Runnable {
 		_couponDao = new CouponDBDAO();
 	}// c-tor
 	
-	public void stopTask() {
+	public synchronized void stopTask(){
 		_quit = false;
 	}// stopTask
 	
