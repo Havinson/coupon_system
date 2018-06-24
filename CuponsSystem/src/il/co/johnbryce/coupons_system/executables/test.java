@@ -1,75 +1,58 @@
 package il.co.johnbryce.coupons_system.executables;
 
-import java.sql.Connection;
-import java.sql.Date;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
+import java.util.Date;
 
-import il.co.johnbryce.coupons_system.dao.CompanyDAO;
-import il.co.johnbryce.coupons_system.dao.CompanyDBDAO;
 import il.co.johnbryce.coupons_system.exceptions.ClientNotFoundException;
 import il.co.johnbryce.coupons_system.exceptions.CouponAlreadyExistException;
 import il.co.johnbryce.coupons_system.facades.AdminFacade;
 import il.co.johnbryce.coupons_system.facades.ClientType;
 import il.co.johnbryce.coupons_system.facades.CompanyFacade;
-import il.co.johnbryce.coupons_system.facades.CouponClientFacade;
 import il.co.johnbryce.coupons_system.facades.CouponSystem;
+import il.co.johnbryce.coupons_system.facades.CustomerFacade;
 import il.co.johnbryce.coupons_system.javabeans.Company;
 import il.co.johnbryce.coupons_system.javabeans.Coupon;
 import il.co.johnbryce.coupons_system.javabeans.CouponType;
-import il.co.johnbryce.coupons_system.utils.ConnectionPool;
-import il.co.johnbryce.coupons_system.utils.DailyCouponExpirationTask;
+import il.co.johnbryce.coupons_system.javabeans.Customer;
 
 public class test {
 
 	public static void main(String[] args) {
-//		AdminFacade admin;
-//		try {
-//			admin = (AdminFacade)CouponSystem.getCouponSystem().login("Admin", "12345", ClientType.ADMIN);
-//		} catch (ClientNotFoundException e1) {
-//			// TODO Auto-generated catch block
-//			e1.printStackTrace();
-//			admin = null;
-//		}
-//		Company company = new Company(12345, "Global Travels", "1215", "mail@GlobalTravels.com");
-//		((AdminFacade)admin).createCompany(company);
-//		admin.createCompany(company);
-//
-		CompanyFacade globalTravels;
+		AdminFacade admin = null;
+		Collection<Company> allCompanies;
 		try {
-			globalTravels = (CompanyFacade) CouponSystem.getCouponSystem().login("Global Travels", "1215",
-					ClientType.COMPANY);
+			admin = (AdminFacade) CouponSystem.getCouponSystem().login("Admin", "12345", ClientType.ADMIN);
 		} catch (ClientNotFoundException e) {
 			e.printStackTrace();
-			globalTravels = null;
 		}
-		System.out.println(globalTravels);
-//				Coupon coupon = new Coupon(1, "Vocation in peru", new Date(2015 - 03 - 12), new Date(2018 - 9 - 12), 45,
-//				CouponType.TRAVELLING.name(), "Some message", 23.5, "url to image");
-//		try {
-//			globalTravels.createCoupon(coupon);
-//		} catch (CouponAlreadyExistException e) {
-//			e.printStackTrace();
-//		}
-//		
-		
-//		System.out.println(globalTravels.getAllCoupons().size());
-		
-		
-		
-//		CompanyDAO companyDao = new CompanyDBDAO();
-//		List<Company> allCompanies = (ArrayList<Company>) companyDao.getAllCompanies();
-//		for(Company curr: allCompanies) {
-//			System.out.println(curr);
-//		}
-//		boolean test = false;
-//		for(Company curr: allCompanies) {
-//			if(curr.getCompanyName().equals(company.getCompanyName()) && curr.getPassword().equals(company.getPassword())) {
-//				test = true;
-//			}
-//		}
-//		System.out.println(test);
-	
-	}
 
-}
+		admin.createCompany(new Company(1, "TestCompany1", "123", "company1@email.com"));
+		allCompanies = admin.getAllCompanies();
+		for(Company curr: allCompanies) {
+			System.out.println(curr);
+		}
+		CompanyFacade company1 = null;
+		try {
+			company1 = (CompanyFacade) CouponSystem.getCouponSystem().login("TestCompany1", "123", ClientType.COMPANY);
+		} catch (ClientNotFoundException e) {
+			e.printStackTrace();
+		}
+		Coupon coupon1 = new Coupon(1, "TestCoupon1", new Date(2018, 05, 12), new Date(2019, 05, 12), 10,
+				"CAMPING", "The testCompany1 message", 29.9, "url to image testCompany1");
+		try {
+			company1.createCoupon(coupon1);
+		} catch (CouponAlreadyExistException e) {
+			e.printStackTrace();
+		}
+		admin.createCustomer(new Customer(1, "TestCustomer", "123"));
+		CustomerFacade customer = null;
+		try {
+			customer = (CustomerFacade) CouponSystem.getCouponSystem().login("TestCustomer", "123",
+					ClientType.CUSTOMER);
+		} catch (ClientNotFoundException e) {
+			e.printStackTrace();
+		}
+		customer.purchaseCoupon(coupon1);
+			
+	}// main
+}// Test
