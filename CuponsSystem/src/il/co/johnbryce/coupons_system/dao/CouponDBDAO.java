@@ -198,17 +198,14 @@ public class CouponDBDAO implements CouponDAO {
 			prepStm = conn.prepareStatement("select Coupon_ID from CustomerCoupon where Customer_ID = ?");
 			prepStm.setLong(1, customer.getId());
 			resultSet = prepStm.executeQuery();
-			while(resultSet.next()) {
-				if(resultSet.getLong("Coupon_ID") == coupon.get_id()) {
-					ret = true;
-					break;
-				}
-			_pool.returnConnection(conn);
+			if(resultSet.next()) {
+					ret = true;	
 			}
+			_pool.returnConnection(conn);
 		}catch (SQLException e) {
-			//TODO: take care of SQLexception
+			e.printStackTrace();
 		}catch (Exception e) {
-			//TODO: Take care of exception
+			e.printStackTrace();
 		}
 		return ret;
 	}// check coupon existing
@@ -228,9 +225,9 @@ public class CouponDBDAO implements CouponDAO {
 			
 			_pool.returnConnection(conn);
 		}catch (SQLException e) {
-//			TODO: take care of SQLException
+			e.printStackTrace();
 		}catch (Exception e) {
-//			TODO: take care of Exception
+			e.printStackTrace();
 		}
 		return amount;
 	}// check coupon amount

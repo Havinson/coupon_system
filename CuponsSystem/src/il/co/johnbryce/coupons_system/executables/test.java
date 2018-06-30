@@ -17,6 +17,7 @@ import il.co.johnbryce.coupons_system.javabeans.Customer;
 
 public class test {
 
+	@SuppressWarnings("deprecation")
 	public static void main(String[] args) {
 		AdminFacade admin = null;
 		Collection<Company> allCompanies;

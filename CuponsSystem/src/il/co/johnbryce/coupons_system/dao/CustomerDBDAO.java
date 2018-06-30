@@ -105,13 +105,9 @@ public class CustomerDBDAO implements CustomerDAO {
 					resultSet.getString("Password"));
 			_pool.returnConnection(conn);
 		} catch (SQLException e) {
-			System.out.println("A customer with this ID is not exist!");
-			System.out.println("Maybe the customer is not exist in the database.");
-			System.out.println("Or you have trouble with connection to database.");
-			System.out.println("Please, check you customer ID and your`s connection.");
+			e.printStackTrace();
 		} catch (Exception e) {
-			System.out.println("It`s not SQL server problem, please torn to administrator!");
-			// TODO: take care of exception
+			e.printStackTrace();
 		}
 		return customer;
 	}// get customer
@@ -132,11 +128,9 @@ public class CustomerDBDAO implements CustomerDAO {
 			}
 			_pool.returnConnection(conn);
 		} catch (SQLException e) {
-			System.out.println("You have trouble with connection to database.");
-			System.out.println("Please, check your connection.");
+			e.printStackTrace();
 		} catch (Exception e) {
-			System.out.println("This is not SQL server problem, please torn to administrator");
-			// TODO: take care of exception
+			e.printStackTrace();
 		}
 		return customers;
 	}// get all customers
@@ -174,7 +168,7 @@ public class CustomerDBDAO implements CustomerDAO {
 		boolean ret = false;
 		List<Customer> allCustomers = (ArrayList<Customer>)getAllCustomers();
 		for(Customer curr: allCustomers) {
-			if(curr.getCustomerName().equals(customerName) && curr.getPassword().equals(password)) {
+			if(curr.getCustomerName().equalsIgnoreCase(customerName) && curr.getPassword().equals(password)) {
 				ret = true;
 			}
 		}

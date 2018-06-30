@@ -158,7 +158,7 @@ public class CompanyDBDAO implements CompanyDAO {
 		boolean ret = false;
 		List<Company> allCompanies = (ArrayList<Company>)getAllCompanies();
 		for(Company curr: allCompanies) {
-			if(curr.getCompanyName().equals(companyName) && curr.getPassword().equals(password)) {
+			if(curr.getCompanyName().equalsIgnoreCase(companyName) && curr.getPassword().equals(password)) {
 				ret = true;
 			}
 		}

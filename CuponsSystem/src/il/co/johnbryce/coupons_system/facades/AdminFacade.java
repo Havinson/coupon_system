@@ -35,7 +35,7 @@ public class AdminFacade implements CouponClientFacade {
 	 */
 	public AdminFacade login(String userName, String password, ClientType type) throws ClientNotFoundException{
 		AdminFacade ret = null;
-		if(userName.equalsIgnoreCase("Admin") && password.equalsIgnoreCase("12345")) {
+		if(userName.equalsIgnoreCase("Admin") && password.equals("12345")) {
 			ret = this;
 		}else {
 			throw new ClientNotFoundException("User name or password is incorrect!");

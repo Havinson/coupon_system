@@ -31,7 +31,6 @@ public class CustomerFacade implements CouponClientFacade {
 			throw new ClientNotFoundException("user name or password is incorrect!");
 		};
 		return ret;
-		
 	}// login
 	
 	public void purchaseCoupon(Coupon coupon) {
@@ -39,8 +38,7 @@ public class CustomerFacade implements CouponClientFacade {
 			_couponDao.getCoupon(coupon.get_id()).set_amount(-1);
 			_customerDao.addToCustomerCoupon(_currentCustomer, coupon);
 			_couponDao.updateCoupon(coupon);
-			
-		};
+		}
 	}// purchase Coupon
 	
 	public Collection<Coupon> getAllPurchasedCoupons(){
