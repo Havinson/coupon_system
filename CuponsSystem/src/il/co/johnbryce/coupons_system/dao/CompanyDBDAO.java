@@ -142,7 +142,7 @@ public class CompanyDBDAO implements CompanyDAO {
 			prepStm.setLong(1, company.getId());
 			resultSet = prepStm.executeQuery();
 			while (resultSet.next()) {
-				coupons.add(couponDb.getCoupon(resultSet.getLong("ID")));
+				coupons.add(couponDb.getCoupon(resultSet.getLong("Coupon_ID")));
 			}
 			_pool.returnConnection(conn);
 		} catch (SQLException e) {
@@ -156,9 +156,9 @@ public class CompanyDBDAO implements CompanyDAO {
 	@Override
 	public boolean login(String companyName, String password) {
 		boolean ret = false;
-		List<Company> allCompanies = (ArrayList<Company>)getAllCompanies();
-		for(Company curr: allCompanies) {
-			if(curr.getCompanyName().equalsIgnoreCase(companyName) && curr.getPassword().equals(password)) {
+		List<Company> allCompanies = (ArrayList<Company>) getAllCompanies();
+		for (Company curr : allCompanies) {
+			if (curr.getCompanyName().equalsIgnoreCase(companyName) && curr.getPassword().equals(password)) {
 				ret = true;
 			}
 		}
@@ -168,9 +168,9 @@ public class CompanyDBDAO implements CompanyDAO {
 	@Override
 	public Company getCompanyByLogin(String companyName, String password) {
 		Company ret = null;
-		List<Company> allCompanies = (ArrayList<Company>)getAllCompanies();
-		for(Company curr: allCompanies) {
-			if(curr.getCompanyName().equals(companyName) && curr.getPassword().equals(password)) {
+		List<Company> allCompanies = (ArrayList<Company>) getAllCompanies();
+		for (Company curr : allCompanies) {
+			if (curr.getCompanyName().equals(companyName) && curr.getPassword().equals(password)) {
 				ret = curr;
 			}
 		}

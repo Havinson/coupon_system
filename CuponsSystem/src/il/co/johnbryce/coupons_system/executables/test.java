@@ -12,7 +12,6 @@ import il.co.johnbryce.coupons_system.facades.CouponSystem;
 import il.co.johnbryce.coupons_system.facades.CustomerFacade;
 import il.co.johnbryce.coupons_system.javabeans.Company;
 import il.co.johnbryce.coupons_system.javabeans.Coupon;
-import il.co.johnbryce.coupons_system.javabeans.CouponType;
 import il.co.johnbryce.coupons_system.javabeans.Customer;
 
 public class test {
@@ -29,19 +28,24 @@ public class test {
 
 		admin.createCompany(new Company(1, "TestCompany1", "123", "company1@email.com"));
 		allCompanies = admin.getAllCompanies();
-		for(Company curr: allCompanies) {
+		for (Company curr : allCompanies) {
 			System.out.println(curr);
 		}
 		CompanyFacade company1 = null;
 		try {
 			company1 = (CompanyFacade) CouponSystem.getCouponSystem().login("TestCompany1", "123", ClientType.COMPANY);
+			System.out.println(CouponSystem.getCouponSystem().login("TestCompany1", "123", ClientType.COMPANY));
 		} catch (ClientNotFoundException e) {
 			e.printStackTrace();
 		}
-		Coupon coupon1 = new Coupon(1, "TestCoupon1", new Date(2018, 05, 12), new Date(2019, 05, 12), 10,
-				"CAMPING", "The testCompany1 message", 29.9, "url to image testCompany1");
+		Coupon coupon1 = new Coupon(1, "TestCoupon1", new Date(2018, 05, 12), new Date(2019, 05, 12), 10, "CAMPING",
+				"The testCompany1 message", 29.9, "url to image testCompany1");
 		try {
 			company1.createCoupon(coupon1);
+			Collection<Coupon> coupons = company1.getAllCoupons();
+			for (Coupon curr : coupons) {
+				System.out.println(curr);
+			}
 		} catch (CouponAlreadyExistException e) {
 			e.printStackTrace();
 		}
@@ -54,6 +58,6 @@ public class test {
 			e.printStackTrace();
 		}
 		customer.purchaseCoupon(coupon1);
-			
+
 	}// main
 }// Test

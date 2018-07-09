@@ -1,13 +1,15 @@
 package il.co.johnbryce.coupons_system.facades;
 
 import il.co.johnbryce.coupons_system.exceptions.ClientNotFoundException;
+import il.co.johnbryce.coupons_system.utils.ConnectionPool;
+import il.co.johnbryce.coupons_system.utils.DailyCouponExpirationTask;
 
 public class CouponSystem {
 	private static CouponSystem _instance = new CouponSystem();
+	Thread dailyExpirationTask = new Thread(new DailyCouponExpirationTask());
 
 	private CouponSystem() {
-//		Thread dailyExpirationTask = new Thread(new DailyCouponExpirationTask());
-//		dailyExpirationTask.start();
+		dailyExpirationTask.start();
 	}// c-tor
 
 	public static CouponSystem getCouponSystem() {
@@ -18,26 +20,23 @@ public class CouponSystem {
 		CouponClientFacade client;
 		switch (type) {
 		case ADMIN:
-			client = new AdminFacade();
-			client.login(userName, password, type);
+			client = new AdminFacade().login(userName, password, type);
 			break;
 		case COMPANY:
-			client = new CompanyFacade();
-			client.login(userName, password, type);
+			client = new CompanyFacade().login(userName, password, type);
 			break;
 		case CUSTOMER:
-			client = new CustomerFacade();
-			client.login(userName, password, type);
+			client = new CustomerFacade().login(userName, password, type);
 			break;
 		default:
 			client = null;
-			System.out.println("The client is not exist!");
-			break;
+			throw new ClientNotFoundException("Login failed!");
 		}
 		return client;
 	}// login
 
 	public void shutdown() {
-
+		dailyExpirationTask.interrupt();
+		ConnectionPool.getConnectionPool().closeAllConnections();
 	}// shutdown
 }// CouponSystem
