@@ -101,7 +101,7 @@ public class CustomerDBDAO implements CustomerDAO {
 			prepStm.setLong(1, id);
 			resultSet = prepStm.executeQuery();
 			resultSet.next();
-			customer = new Customer(resultSet.getLong("CustomerID"), resultSet.getString("CustomerName"),
+			customer = new Customer(resultSet.getLong("ID"), resultSet.getString("CustomerName"),
 					resultSet.getString("Password"));
 			_pool.returnConnection(conn);
 		} catch (SQLException e) {
@@ -166,9 +166,9 @@ public class CustomerDBDAO implements CustomerDAO {
 	@Override
 	public boolean login(String customerName, String password) {
 		boolean ret = false;
-		List<Customer> allCustomers = (ArrayList<Customer>)getAllCustomers();
-		for(Customer curr: allCustomers) {
-			if(curr.getCustomerName().equalsIgnoreCase(customerName) && curr.getPassword().equals(password)) {
+		List<Customer> allCustomers = (ArrayList<Customer>) getAllCustomers();
+		for (Customer curr : allCustomers) {
+			if (curr.getCustomerName().equalsIgnoreCase(customerName) && curr.getPassword().equals(password)) {
 				ret = true;
 			}
 		}
@@ -178,28 +178,29 @@ public class CustomerDBDAO implements CustomerDAO {
 	@Override
 	public Customer getCustomerByLogin(String customerName, String password) {
 		Customer customer = null;
-		List<Customer> allCustomers = (ArrayList<Customer>)getAllCustomers();
-		for(Customer curr: allCustomers) {
+		List<Customer> allCustomers = (ArrayList<Customer>) getAllCustomers();
+		for (Customer curr : allCustomers) {
 			if (curr.getCustomerName().equals(customerName) && curr.getPassword().equals(password)) {
 				customer = curr;
 			}
 		}
 		return customer;
 	}// get logged in customer
-	
+
+	@Override
 	public void addToCustomerCoupon(Customer customer, Coupon coupon) {
 		PreparedStatement stm;
 		Connection conn;
 		try {
 			conn = _pool.getConnection();
-			stm = conn.prepareStatement("insert into CustomerCuopon (Customer_ID, Coupon_ID) values (?, ?)");
+			stm = conn.prepareStatement("insert into CustomerCoupon (Customer_ID, Coupon_ID) values (?, ?)");
 			stm.setLong(1, customer.getId());
 			stm.setLong(2, coupon.get_id());
 			stm.executeUpdate();
 			_pool.returnConnection(conn);
-		}catch(SQLException e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
-		}catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}// addToCustomerCoupon

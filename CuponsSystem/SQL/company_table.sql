@@ -1,3 +1,4 @@
+drop database if exists CouponDB;
 CREATE DATABASE CouponDB;
 USE CouponDB;
 CREATE TABLE `Company` (
@@ -25,8 +26,8 @@ CREATE TABLE `Coupon` (
 CREATE TABLE `CustomerCoupon` (
 	Customer_ID NUMERIC,
 	Coupon_ID NUMERIC,
-	PRIMARY KEY (Customer_ID, Coupon_ID));
+	constraint pk_customer_coupon PRIMARY KEY (Customer_ID, Coupon_ID));
 CREATE TABLE `CompanyCoupon` (
 	Company_ID NUMERIC,
     Coupon_ID NUMERIC,
-    PRIMARY KEY(Company_ID, Coupon_ID));
+    constraint pk_company_coupon PRIMARY KEY(Company_ID, Coupon_ID));

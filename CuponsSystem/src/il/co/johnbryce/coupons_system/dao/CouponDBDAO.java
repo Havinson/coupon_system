@@ -75,17 +75,9 @@ public class CouponDBDAO implements CouponDAO {
 		Connection conn = null;
 		try {
 			conn = _pool.getConnection();
-			prepStm = conn.prepareStatement("UPDATE Coupon SET "
-					+ "ID = ?, "
-					+ "Title = ?,"
-					+ "StartDate = ?,"
-					+ "EndDate = ?,"
-					+ "Amount = ?,"
-					+ "Type = ?,"
-					+ "Message = ?,"
-					+ "Price = ?,"
-					+ "Image = ?"
-					+ " WHERE ID = ?;");
+			prepStm = conn.prepareStatement(
+					"UPDATE Coupon SET " + "ID = ?, " + "Title = ?," + "StartDate = ?," + "EndDate = ?," + "Amount = ?,"
+							+ "Type = ?," + "Message = ?," + "Price = ?," + "Image = ?" + " WHERE ID = ?;");
 			prepStm.setLong(1, coupon.get_id());
 			prepStm.setString(2, coupon.get_title());
 			prepStm.setDate(3, new Date(coupon.get_startDate().getTime()));
@@ -137,7 +129,7 @@ public class CouponDBDAO implements CouponDAO {
 	}// get coupon
 
 	@Override
-	public Collection<Coupon> getAllCoupons() {
+	public synchronized Collection<Coupon> getAllCoupons() {
 		List<Coupon> coupons = new ArrayList<>();
 		Statement stm;
 		ResultSet resultSet;
@@ -198,18 +190,19 @@ public class CouponDBDAO implements CouponDAO {
 			prepStm = conn.prepareStatement("select Coupon_ID from CustomerCoupon where Customer_ID = ?");
 			prepStm.setLong(1, customer.getId());
 			resultSet = prepStm.executeQuery();
-			if(resultSet.next()) {
-					ret = true;	
+			if (resultSet.next()) {
+				ret = true;
 			}
 			_pool.returnConnection(conn);
-		}catch (SQLException e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
-		}catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return ret;
 	}// check coupon existing
-	
+
+	@Override
 	public int checkCouponAmount(Coupon coupon) {
 		int amount = 0;
 		Connection conn;
@@ -222,11 +215,11 @@ public class CouponDBDAO implements CouponDAO {
 			resultSet = prepStm.executeQuery();
 			resultSet.next();
 			amount = resultSet.getInt("Amount");
-			
+
 			_pool.returnConnection(conn);
-		}catch (SQLException e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
-		}catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return amount;
@@ -258,7 +251,8 @@ public class CouponDBDAO implements CouponDAO {
 
 		return coupons;
 	}// get all company coupons
-	
+
+	@Override
 	public void addCouponAndCompanyJoin(Coupon coupon, long companyId) {
 		PreparedStatement stm;
 		Connection conn = null;
@@ -269,10 +263,10 @@ public class CouponDBDAO implements CouponDAO {
 			stm.setLong(2, companyId);
 			stm.executeUpdate();
 			_pool.returnConnection(conn);
-		}catch(SQLException e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 //			TODO: Take care of exception
-		}catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 //			Take care of exception
 		}
@@ -289,20 +283,23 @@ public class CouponDBDAO implements CouponDAO {
 			stm.setLong(2, companyId);
 			stm.executeUpdate();
 			_pool.returnConnection(conn);
-		}catch(SQLException e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 //			TODO: Take care of exception
-		}catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 //			Take care of exception
 		}
 	}// removeCouponAndCompanyJoin
+
 	/**
-	 * Returns true if coupon not exist in this company
-	 * Returns false if coupon already exist in this company
+	 * Returns true if coupon not exist in this company Returns false if coupon
+	 * already exist in this company
+	 * 
 	 * @param Coupon object
-	 * @param long company ID
+	 * @param        long company ID
 	 */
+	@Override
 	public boolean checkCompanyCouponExisting(Coupon coupon, long companyId) {
 		boolean ret = true;
 		Connection conn;
@@ -313,15 +310,15 @@ public class CouponDBDAO implements CouponDAO {
 			prepStm = conn.prepareStatement("select Coupon_ID from CompanyCoupon where Company_ID = ?;");
 			prepStm.setLong(1, companyId);
 			resultSet = prepStm.executeQuery();
-			while(resultSet.next()) {
+			while (resultSet.next()) {
 				if (coupon.get_id() == resultSet.getLong("Coupon_ID")) {
 					ret = false;
 				}
 			}
 			_pool.returnConnection(conn);
-		}catch (SQLException e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
-		}catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return ret;
