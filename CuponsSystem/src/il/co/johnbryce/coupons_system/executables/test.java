@@ -19,9 +19,10 @@ public class test {
 	@SuppressWarnings("deprecation")
 	public static void main(String[] args) {
 		AdminFacade admin = null;
+		CouponSystem system = CouponSystem.getCouponSystem();
 		Collection<Company> allCompanies;
 		try {
-			admin = (AdminFacade) CouponSystem.getCouponSystem().login("Admin", "12345", ClientType.ADMIN);
+			admin = (AdminFacade) system.login("Admin", "12345", ClientType.ADMIN);
 		} catch (ClientNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -33,8 +34,8 @@ public class test {
 		}
 		CompanyFacade company1 = null;
 		try {
-			company1 = (CompanyFacade) CouponSystem.getCouponSystem().login("TestCompany1", "123", ClientType.COMPANY);
-			System.out.println(CouponSystem.getCouponSystem().login("TestCompany1", "123", ClientType.COMPANY));
+			company1 = (CompanyFacade) system.login("TestCompany1", "123", ClientType.COMPANY);
+			System.out.println(system.login("TestCompany1", "123", ClientType.COMPANY));
 		} catch (ClientNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -52,12 +53,15 @@ public class test {
 		admin.createCustomer(new Customer(1, "TestCustomer", "123"));
 		CustomerFacade customer = null;
 		try {
-			customer = (CustomerFacade) CouponSystem.getCouponSystem().login("TestCustomer", "123",
-					ClientType.CUSTOMER);
+			customer = (CustomerFacade) system.login("TestCustomer", "123", ClientType.CUSTOMER);
 		} catch (ClientNotFoundException e) {
 			e.printStackTrace();
 		}
 		customer.purchaseCoupon(coupon1);
+		Collection<Coupon> customersCoupons = customer.getAllPurchasedCoupons();
+		for (Coupon curr : customersCoupons) {
+			System.out.println(curr);
+		}
 
 	}// main
 }// Test

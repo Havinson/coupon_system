@@ -149,16 +149,13 @@ public class CustomerDBDAO implements CustomerDAO {
 			prepStm.setLong(1, customer.getId());
 			resultSet = prepStm.executeQuery();
 			while (resultSet.next()) {
-				coupons.add(couponDb.getCoupon(resultSet.getLong("ID")));
+				coupons.add(couponDb.getCoupon(resultSet.getLong("Coupon_ID")));
 			}
 			_pool.returnConnection(conn);
 		} catch (SQLException e) {
-			System.out.println("The are is no coupons of this company.");
-			System.out.println("Or you have trouble with connection to database.");
-			System.out.println("Please, check you company coupons and your`s connection.");
+			e.printStackTrace();
 		} catch (Exception e) {
-			// TODO: take care of exception
-			System.out.println("This is not SQL server problem, please turn to administrator");
+			e.printStackTrace();
 		}
 		return coupons;
 	}// get coupons

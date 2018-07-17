@@ -15,8 +15,9 @@ public class ConnectionPool {
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			for (int i = 0; i < 9; i++) {
-				_connection.add(DriverManager.getConnection("jdbc:mysql://localhost:3306/CouponDB?useSSL=false", "igor",
-						"#A12348765b"));
+				_connection.add(DriverManager.getConnection(
+						"jdbc:mysql://localhost:3306/CouponDB?allowPublicKeyRetrieval=true&useSSL=false&&serverTimezone=UTC",
+						"igor", "pretender1988"));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
