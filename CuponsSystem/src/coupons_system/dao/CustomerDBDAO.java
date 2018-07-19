@@ -33,12 +33,8 @@ public class CustomerDBDAO implements CustomerDAO {
 			prepStm.executeUpdate();
 			_pool.returnConnection(conn);
 		} catch (SQLException e) {
-			System.out.println("A customer has not been created!");
-			System.out.println("Maybe this customer already exist in database,");
-			System.out.println("or You have trouble whith connection to sql server.");
-			System.out.println("Please check if a customer is exist or not.");
+			e.printStackTrace();
 		} catch (Exception e) {
-			// TODO take care for exception
 			e.printStackTrace();
 		}
 	}// create customer
@@ -54,12 +50,9 @@ public class CustomerDBDAO implements CustomerDAO {
 			prepStm.executeUpdate();
 			_pool.returnConnection(conn);
 		} catch (SQLException e) {
-			System.out.println("A customer has not been deleted!");
-			System.out.println("Maybe the customer is not exist in the database.");
-			System.out.println("Or you have trouble with connection to database.");
-			System.out.println("Please, check customer ID and your`s connection.");
+			e.printStackTrace();
 		} catch (Exception e) {
-			// TODO: take care of exception
+			e.printStackTrace();
 		}
 	}// remove customer
 
@@ -79,13 +72,8 @@ public class CustomerDBDAO implements CustomerDAO {
 			_pool.returnConnection(conn);
 		} catch (SQLException e) {
 			e.printStackTrace();
-			System.out.println("A customer has not been updated!");
-			System.out.println("Maybe a customer is not exist in the database.");
-			System.out.println("Or you have trouble with connection to database.");
-			System.out.println("Please, check you customer ID and your`s connection.");
 		} catch (Exception e) {
-			System.out.println("It`s not SQL server problem, please turn to your administrtor.");
-			// TODO: take care of exception
+			e.printStackTrace();
 		}
 	}// update customer
 

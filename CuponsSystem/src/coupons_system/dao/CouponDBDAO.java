@@ -243,10 +243,8 @@ public class CouponDBDAO implements CouponDAO {
 			_pool.returnConnection(conn);
 		} catch (SQLException e) {
 			e.printStackTrace();
-			System.out.println("You have trouble with connection to database.");
-			System.out.println("Please, check your connection.");
 		} catch (Exception e) {
-			System.out.println("This is not SQL server problem, please turn to administrator");
+			e.printStackTrace();
 		}
 
 		return coupons;
@@ -265,10 +263,8 @@ public class CouponDBDAO implements CouponDAO {
 			_pool.returnConnection(conn);
 		} catch (SQLException e) {
 			e.printStackTrace();
-//			TODO: Take care of exception
 		} catch (Exception e) {
 			e.printStackTrace();
-//			Take care of exception
 		}
 	}// addCouponAndCompanyJoin
 
@@ -285,10 +281,8 @@ public class CouponDBDAO implements CouponDAO {
 			_pool.returnConnection(conn);
 		} catch (SQLException e) {
 			e.printStackTrace();
-//			TODO: Take care of exception
 		} catch (Exception e) {
 			e.printStackTrace();
-//			Take care of exception
 		}
 	}// removeCouponAndCompanyJoin
 

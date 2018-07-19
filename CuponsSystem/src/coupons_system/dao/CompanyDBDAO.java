@@ -37,7 +37,6 @@ public class CompanyDBDAO implements CompanyDAO {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} catch (Exception e) {
-			// TODO take care for exception
 			e.printStackTrace();
 		}
 
@@ -57,7 +56,6 @@ public class CompanyDBDAO implements CompanyDAO {
 			e.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();
-			// TODO: take care of exception
 		}
 	}// remove company
 
