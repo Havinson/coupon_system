@@ -16,52 +16,56 @@ public class CustomerFacade implements CouponClientFacade {
 	private CouponDAO _couponDao;
 	private CustomerDAO _customerDao;
 	private Customer _currentCustomer;
-	
+
 	public CustomerFacade() {
 		_couponDao = new CouponDBDAO();
 		_customerDao = new CustomerDBDAO();
 	}// c-tor
+
 	@Override
 	public CustomerFacade login(String userName, String password, ClientType type) throws ClientNotFoundException {
 		CustomerFacade ret = null;
-		if(_customerDao.login(userName, password)) {
+		if (_customerDao.login(userName, password)) {
 			ret = this;
 			_currentCustomer = _customerDao.getCustomerByLogin(userName, password);
-		}else{
+			System.out.println("user " + userName + " is loged in");
+		} else {
 			throw new ClientNotFoundException("user name or password is incorrect!");
-		};
+		}
+		;
 		return ret;
 	}// login
-	
+
 	public void purchaseCoupon(Coupon coupon) {
-		if (_couponDao.checkCouponExisting(coupon, _currentCustomer) == false && _couponDao.checkCouponAmount(coupon) > 0) {
+		if (_couponDao.checkCouponExisting(coupon, _currentCustomer) == false
+				&& _couponDao.checkCouponAmount(coupon) > 0) {
 			_couponDao.getCoupon(coupon.get_id()).set_amount(-1);
 			_customerDao.addToCustomerCoupon(_currentCustomer, coupon);
 			_couponDao.updateCoupon(coupon);
 		}
 	}// purchase Coupon
-	
-	public Collection<Coupon> getAllPurchasedCoupons(){
+
+	public Collection<Coupon> getAllPurchasedCoupons() {
 		Collection<Coupon> coupons = _customerDao.getCoupons(_currentCustomer);
 		return coupons;
 	}// get all purchased coupons
-	
-	public Collection<Coupon> getAllPurchasedCouponsByType(CouponType type){
+
+	public Collection<Coupon> getAllPurchasedCouponsByType(CouponType type) {
 		Collection<Coupon> allCoupons = getAllPurchasedCoupons();
 		Collection<Coupon> couponsByType = new ArrayList<>();
-		for(Coupon curr: allCoupons) {
-			if(curr.get_type()==type) {
+		for (Coupon curr : allCoupons) {
+			if (curr.get_type() == type) {
 				couponsByType.add(curr);
 			}
 		}
 		return couponsByType;
 	}// get all purchased coupons by type
-	
-	public Collection<Coupon> getAllPurchasedCouponsByPrice(double price){
+
+	public Collection<Coupon> getAllPurchasedCouponsByPrice(double price) {
 		Collection<Coupon> allCoupons = getAllPurchasedCoupons();
 		Collection<Coupon> couponsByPrice = new ArrayList<>();
-		for(Coupon curr: allCoupons) {
-			if(curr.get_price()==price) {
+		for (Coupon curr : allCoupons) {
+			if (curr.get_price() == price) {
 				couponsByPrice.add(curr);
 			}
 		}

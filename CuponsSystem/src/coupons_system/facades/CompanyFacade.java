@@ -17,57 +17,59 @@ public class CompanyFacade implements CouponClientFacade {
 	private CouponDAO _couponDAO;
 	private CompanyDAO _companyDao;
 	private Company _currentCompany;
-	
-	public CompanyFacade(){
+
+	public CompanyFacade() {
 		_couponDAO = new CouponDBDAO();
 		_companyDao = new CompanyDBDAO();
 	}// c-tor
+
 	@Override
-	public CompanyFacade login(String userName, String password, ClientType type) throws ClientNotFoundException{
+	public CompanyFacade login(String userName, String password, ClientType type) throws ClientNotFoundException {
 		CompanyFacade ret = null;
-		if(_companyDao.login(userName, password)) {
+		if (_companyDao.login(userName, password)) {
 			_currentCompany = _companyDao.getCompanyByLogin(userName, password);
 			ret = this;
-
-		}else {
+		} else {
 			throw new ClientNotFoundException("user name or password is incorrect!");
 		}
 		return ret;
-	}//login
-	
+	}// login
+
 	public void updateCoupon(Coupon coupon) {
 		_couponDAO.updateCoupon(coupon);
-	}//updateCoupon
-	
+	}// updateCoupon
+
 	public void removeCoupon(Coupon coupon) {
 		_couponDAO.removeCoupon(coupon);
 		_couponDAO.removeCouponAndCompanyJoin(coupon, _currentCompany.getId());
-	}//removeCoupon
+		System.out.println("Coupon " + coupon.get_title() + " was removed");
+	}// removeCoupon
+
 	public Coupon getCoupon(long id) {
 		return _couponDAO.getCoupon(id);
 	}// get coupon
-	
-	public Collection<Coupon> getAllCoupons(){
+
+	public Collection<Coupon> getAllCoupons() {
 		return _companyDao.getCuopons(_currentCompany);
 	}// get all coupons
-	
-	public Collection<Coupon> getCouponByType(CouponType type){
+
+	public Collection<Coupon> getCouponByType(CouponType type) {
 		Collection<Coupon> couponsByType = new ArrayList<>();
 		Collection<Coupon> allCoupons = getAllCoupons();
-		for(Coupon curr: allCoupons) {
-			if(curr.get_type() == type) {
+		for (Coupon curr : allCoupons) {
+			if (curr.get_type() == type) {
 				couponsByType.add(curr);
 			}
 		}
 		return couponsByType;
 	}// get coupons by type
-	
-	public void createCoupon(Coupon coupon) throws CouponAlreadyExistException{
-		if(_couponDAO.checkCompanyCouponExisting(coupon, _currentCompany.getId())) {
-		_couponDAO.createCoupon(coupon);
-		_couponDAO.addCouponAndCompanyJoin(coupon, _currentCompany.getId());
-		}else {
+
+	public void createCoupon(Coupon coupon) throws CouponAlreadyExistException {
+		if (_couponDAO.checkCompanyCouponExisting(coupon, _currentCompany.getId())) {
+			_couponDAO.createCoupon(coupon);
+			_couponDAO.addCouponAndCompanyJoin(coupon, _currentCompany.getId());
+		} else {
 			throw new CouponAlreadyExistException("The coupon already exist!");
 		}
-	}//create coupon
+	}// create coupon
 }// Company facade

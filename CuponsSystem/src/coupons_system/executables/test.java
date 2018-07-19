@@ -51,17 +51,42 @@ public class test {
 			e.printStackTrace();
 		}
 		admin.createCustomer(new Customer(1, "TestCustomer", "123"));
-		CustomerFacade customer = null;
+		admin.createCustomer(new Customer(2, "TestCustomer2", "123"));
+		admin.createCustomer(new Customer(3, "TestCustomer3", "123"));
+		admin.createCustomer(new Customer(4, "TestCustomer4", "123"));
+		CustomerFacade customer1 = null;
+		CustomerFacade customer2 = null;
+		CustomerFacade customer3 = null;
+		CustomerFacade customer4 = null;
 		try {
-			customer = (CustomerFacade) system.login("TestCustomer", "123", ClientType.CUSTOMER);
+			customer1 = (CustomerFacade) system.login("TestCustomer", "123", ClientType.CUSTOMER);
+			customer2 = (CustomerFacade) system.login("TestCustomer2", "123", ClientType.CUSTOMER);
+			customer3 = (CustomerFacade) system.login("TestCustomer3", "123", ClientType.CUSTOMER);
+			customer4 = (CustomerFacade) system.login("TestCustomer4", "123", ClientType.CUSTOMER);
 		} catch (ClientNotFoundException e) {
 			e.printStackTrace();
 		}
-		customer.purchaseCoupon(coupon1);
-		Collection<Coupon> customersCoupons = customer.getAllPurchasedCoupons();
-		for (Coupon curr : customersCoupons) {
+		customer1.purchaseCoupon(coupon1);
+		customer2.purchaseCoupon(coupon1);
+		customer3.purchaseCoupon(coupon1);
+		customer4.purchaseCoupon(coupon1);
+		customer4.purchaseCoupon(coupon1);
+		Collection<Coupon> customersCoupons1 = customer1.getAllPurchasedCoupons();
+		Collection<Coupon> customersCoupons2 = customer1.getAllPurchasedCoupons();
+		Collection<Coupon> customersCoupons3 = customer1.getAllPurchasedCoupons();
+		Collection<Coupon> customersCoupons4 = customer1.getAllPurchasedCoupons();
+		for (Coupon curr : customersCoupons1) {
 			System.out.println(curr);
 		}
-
+		for (Coupon curr : customersCoupons2) {
+			System.out.println(curr);
+		}
+		for (Coupon curr : customersCoupons3) {
+			System.out.println(curr);
+		}
+		for (Coupon curr : customersCoupons4) {
+			System.out.println(curr);
+		}
+		company1.removeCoupon(coupon1);
 	}// main
 }// Test
