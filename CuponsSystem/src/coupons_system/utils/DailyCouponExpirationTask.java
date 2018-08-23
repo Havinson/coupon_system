@@ -32,8 +32,7 @@ public class DailyCouponExpirationTask implements Runnable {
 			try {
 				Thread.sleep(86400000);
 			} catch (InterruptedException e) {
-				// TODO take care of exception in daily coupon expiration class
-				e.printStackTrace();
+				return;
 			}
 		}
 	}// run

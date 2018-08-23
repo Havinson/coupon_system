@@ -35,8 +35,10 @@ public class CouponSystem {
 		return client;
 	}// login
 
-	public void shutdown() {
+	public void shutdown() throws InterruptedException {
 		dailyExpirationTask.interrupt();
+		dailyExpirationTask.join();
 		ConnectionPool.getConnectionPool().closeAllConnections();
+		System.out.println("The system is shutedown");
 	}// shutdown
 }// CouponSystem

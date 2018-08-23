@@ -14,16 +14,16 @@ import coupons_system.javabeans.Customer;
  *	
  */
 public class AdminFacade implements CouponClientFacade {
-	private CompanyDAO _companies;
-	private CustomerDAO _customers;
+	private CompanyDAO _companyDao;
+	private CustomerDAO _customerDao;
 	
 	/**
 	 * Class constructor
 	 * 
 	 */
 	public AdminFacade() {
-		_companies = new CompanyDBDAO();
-		_customers = new CustomerDBDAO();
+		_companyDao = new CompanyDBDAO();
+		_customerDao = new CustomerDBDAO();
 	}// c-tor
 	
 	@Override
@@ -47,21 +47,21 @@ public class AdminFacade implements CouponClientFacade {
 	 * @param company object
 	 */
 	public void createCompany(Company company) {
-		_companies.createCompany(company);
+		_companyDao.createCompany(company);
 	}// create company
 	/**
 	 * Removes a specified company from database
 	 * @param Company object
 	 */
 	public void removeCompany(Company company) {
-		_companies.removeCompany(company);
+		_companyDao.removeCompany(company);
 	}// remove company
 	/**
 	 * Updates a specified company in the database
 	 * @param Company object
 	 */
 	public void updateCompany(Company company) {
-		_companies.updateCompany(company);
+		_companyDao.updateCompany(company);
 	}//update company
 	/**
 	 * Returns a company from database by Id number
@@ -69,35 +69,35 @@ public class AdminFacade implements CouponClientFacade {
 	 * @return Company object
 	 */
 	public Company getCompany(long id) {
-		return _companies.getCompany(id);
+		return _companyDao.getCompany(id);
 	}// get company
 	/**
 	 * Returns collection of all companies from the database
 	 * @return 
 	 */
 	public Collection<Company> getAllCompanies(){
-		return _companies.getAllCompanies();
+		return _companyDao.getAllCompanies();
 	}// get all companies
 	/**
 	 * Creates new customer in the database
 	 * @param customer object
 	 */
 	public void createCustomer(Customer customer) {
-		_customers.createCustomer(customer);
+		_customerDao.createCustomer(customer);
 	}// create customer
 	/**
 	 * Removes customer from the database
 	 * @param customer object
 	 */
 	public void removeCustomer(Customer customer) {
-		_customers.removeCustomer(customer);
+		_customerDao.removeCustomer(customer);
 	}// remove customer
 	/**
 	 * Updates customer in the database
 	 * @param customer object
 	 */
 	public void updateCustomer(Customer customer) {
-		_customers.updateCustomer(customer);
+		_customerDao.updateCustomer(customer);
 	}// update customer
 	/**
 	 * Returns customer object by Id number
@@ -105,14 +105,14 @@ public class AdminFacade implements CouponClientFacade {
 	 * @return customer object
 	 */
 	public Customer getCustomer(long id) {
-		return _customers.getCustomer(id);
+		return _customerDao.getCustomer(id);
 	}// get customer
 	/**
 	 * Returns collection of all of customers
 	 * @return Collection<Customer>
 	 */
 	public Collection<Customer> getAllCustomers() {
-		return _customers.getAllCustomers();	
+		return _customerDao.getAllCustomers();	
 	}// get all customers
 	
 	
