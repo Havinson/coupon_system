@@ -30,6 +30,8 @@ public class test {
 			admin = (AdminFacade) system.login("Admin", "12345", ClientType.ADMIN);
 
 			admin.createCompany(new Company(1, "TestCompany1", "123", "company1@email.com"));
+			admin.createCompany(new Company(2, "TestCompany2", "123", "company1@email.com"));
+			admin.createCompany(new Company(3, "TestCompany", "123", "company1@email.com"));
 			allCompanies = admin.getAllCompanies();
 			for (Company curr : allCompanies) {
 				System.out.println(curr);

@@ -17,7 +17,7 @@ public class ConnectionPool {
 			for (int i = 0; i < 9; i++) {
 				_connection.add(DriverManager.getConnection(
 						"jdbc:mysql://localhost:3306/CouponDB?allowPublicKeyRetrieval=true&useSSL=false&&serverTimezone=UTC",
-						"igor", "pretender1988"));
+						"user", "12345678"));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -28,7 +28,7 @@ public class ConnectionPool {
 		return _instance;
 	}// getConnectionPool
 
-	public Connection getConnection() throws Exception {// TODO: What exactly an exception
+	public Connection getConnection() throws InterruptedException {
 		if (_connection.iterator().hasNext() == false)
 			synchronized (_instance) {
 				this.wait();
@@ -48,7 +48,7 @@ public class ConnectionPool {
 			try {
 				curr.close();
 			} catch (SQLException e) {
-				// TODO Take care of SQLExeption
+				e.printStackTrace();
 			}
 		}
 	}// closeAllConnections

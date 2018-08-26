@@ -114,9 +114,10 @@ public class CompanyDBDAO implements CompanyDAO {
 		try {
 			conn = _pool.getConnection();
 			stm = conn.createStatement();
-			resultSet = stm.executeQuery("SELECT ID FROM Company;");
+			resultSet = stm.executeQuery("SELECT * FROM Company;");
 			while (resultSet.next()) {
-				companies.add(getCompany(resultSet.getLong("ID")));
+				companies.add(new Company(resultSet.getLong("ID"), resultSet.getString("CompanyName"),
+						resultSet.getString("Password"), resultSet.getString("Email")));
 			}
 			_pool.returnConnection(conn);
 		} catch (SQLException e) {

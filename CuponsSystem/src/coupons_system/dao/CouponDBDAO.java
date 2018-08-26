@@ -45,7 +45,6 @@ public class CouponDBDAO implements CouponDAO {
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			System.out.println("A coupon has not been created!");
 		}
 	}// create Coupon
 
@@ -60,12 +59,9 @@ public class CouponDBDAO implements CouponDAO {
 			prepStm.executeUpdate();
 			_pool.returnConnection(conn);
 		} catch (SQLException e) {
-			System.out.println("A coupon has not been deleted!");
-			System.out.println("Maybe the coupon is not exist in the database.");
-			System.out.println("Or you have trouble with connection to database.");
-			System.out.println("Please, check you coupons ID and your`s connection.");
+			e.printStackTrace();
 		} catch (Exception e) {
-			System.out.println("It`s not SQL server problem, please turn to your administrtor.");
+			e.printStackTrace();
 		}
 	}// removeCoupon
 
@@ -92,12 +88,8 @@ public class CouponDBDAO implements CouponDAO {
 			_pool.returnConnection(conn);
 		} catch (SQLException e) {
 			e.printStackTrace();
-			System.out.println("A coupon has not been updated!");
-			System.out.println("Maybe the coupon is not exist in the database.");
-			System.out.println("Or you have trouble with connection to database.");
-			System.out.println("Please, check you coupons ID and your`s connection.");
 		} catch (Exception e) {
-			System.out.println("It`s not SQL server problem, please turn to your administrtor.");
+			e.printStackTrace();
 		}
 	}// Update coupon
 
@@ -118,12 +110,9 @@ public class CouponDBDAO implements CouponDAO {
 					resultSet.getString("Message"), resultSet.getDouble("Price"), resultSet.getString("Image"));
 			_pool.returnConnection(conn);
 		} catch (SQLException e) {
-			System.out.println("A coupon whith this ID is not exist!");
-			System.out.println("Maybe the coupon is not exist in the database.");
-			System.out.println("Or you have trouble with connection to database.");
-			System.out.println("Please, check you coupons ID and your`s connection.");
+			e.printStackTrace();
 		} catch (Exception e) {
-			System.out.println("It`s not SQL server problem, please torn to administrator!");
+			e.printStackTrace();
 		}
 		return cup;
 	}// get coupon
@@ -138,16 +127,18 @@ public class CouponDBDAO implements CouponDAO {
 		try {
 			conn = _pool.getConnection();
 			stm = conn.createStatement();
-			resultSet = stm.executeQuery("SELECT ID FROM Coupon");
+			resultSet = stm.executeQuery("SELECT * FROM Coupon");
 			while (resultSet.next()) {
-				coupons.add(this.getCoupon(resultSet.getLong("ID")));
+				coupons.add(new Coupon(resultSet.getLong("ID"), resultSet.getString("Title"),
+						resultSet.getDate("StartDate"), resultSet.getDate("EndDate"), resultSet.getInt("Amount"),
+						resultSet.getString("Type"), resultSet.getString("Message"), resultSet.getDouble("Price"),
+						resultSet.getString("Image")));
 			}
 			_pool.returnConnection(conn);
 		} catch (SQLException e) {
-			System.out.println("You have trouble with connection to database.");
-			System.out.println("Please, check your connection.");
+			e.printStackTrace();
 		} catch (Exception e) {
-			System.out.println("This is not SQL server problem, please torn to administrator");
+			e.printStackTrace();
 		}
 
 		return coupons;
@@ -162,19 +153,20 @@ public class CouponDBDAO implements CouponDAO {
 
 		try {
 			conn = _pool.getConnection();
-			prepStm = conn.prepareStatement("SELECT ID FROM Coupon WHERE Type =?");
+			prepStm = conn.prepareStatement("SELECT * FROM Coupon WHERE Type =?");
 			prepStm.setString(1, type.name());
 			resultSet = prepStm.executeQuery();
 			while (resultSet.next()) {
-				coupons.add(this.getCoupon(resultSet.getLong("ID")));
+				coupons.add(new Coupon(resultSet.getLong("ID"), resultSet.getString("Title"),
+						resultSet.getDate("StartDate"), resultSet.getDate("EndDate"), resultSet.getInt("Amount"),
+						resultSet.getString("Type"), resultSet.getString("Message"), resultSet.getDouble("Price"),
+						resultSet.getString("Image")));
 			}
 			_pool.returnConnection(conn);
 		} catch (SQLException e) {
-			System.out.println("The are is no coupons with type: " + type);
-			System.out.println("Or you have trouble with connection to database.");
-			System.out.println("Please, check you coupons type and your`s connection.");
+			e.printStackTrace();
 		} catch (Exception e) {
-			System.out.println("This is not SQL server problem, please torn to administrator");
+			e.printStackTrace();
 		}
 		return coupons;
 	}// get coupons by type

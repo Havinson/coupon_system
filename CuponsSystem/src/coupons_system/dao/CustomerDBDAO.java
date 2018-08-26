@@ -110,9 +110,10 @@ public class CustomerDBDAO implements CustomerDAO {
 		try {
 			conn = _pool.getConnection();
 			stm = conn.createStatement();
-			resultSet = stm.executeQuery("SELECT ID FROM Customer");
+			resultSet = stm.executeQuery("SELECT * FROM Customer");
 			while (resultSet.next()) {
-				customers.add(this.getCustomer(resultSet.getLong("ID")));
+				customers.add(new Customer(resultSet.getLong("ID"), resultSet.getString("CustomerName"),
+						resultSet.getString("Password")));
 			}
 			_pool.returnConnection(conn);
 		} catch (SQLException e) {
