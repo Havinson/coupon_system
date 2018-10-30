@@ -39,6 +39,6 @@ public class CouponSystem {
 		dailyExpirationTask.interrupt();
 		dailyExpirationTask.join();
 		ConnectionPool.getConnectionPool().closeAllConnections();
-		System.out.println("The system is shutedown");
+		System.out.println("The system is shutdown");
 	}// shutdown
 }// CouponSystem

@@ -27,6 +27,7 @@ public class DailyCouponExpirationTask implements Runnable {
 			for (Coupon curr : coupons) {
 				if (curr.get_endDate().before(new Date(System.currentTimeMillis()))) {
 					_couponDao.removeCoupon(curr);
+					_couponDao.removeCouponFromJoinTables(curr);
 				}
 			}
 			try {

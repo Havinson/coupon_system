@@ -49,7 +49,14 @@ public interface CouponDAO {
 	 * @param long id
 	 * @return Collection<Coupon>
 	 */
-	public Collection<Coupon> getAllCompanyCoupons(long id);
+	public Collection<Coupon> getAllCompanyCoupons(long companyId);
+
+	/**
+	 * 
+	 * @param customerId
+	 * @return All customers coupons
+	 */
+	public Collection<Coupon> getAllCustomerCoupons(long customerId);
 
 	/**
 	 * A method is return all coupons by selected type
@@ -66,7 +73,7 @@ public interface CouponDAO {
 	 * @param Customer customer
 	 * @return true if the coupon already purchased. Else return false
 	 */
-	public boolean checkCouponExisting(Coupon coupon, Customer customer);
+	public boolean checkIfTheCouponPurchased(Coupon coupon, Customer customer);
 
 	/**
 	 * A method check how many specified coupons left in the system
@@ -83,7 +90,17 @@ public interface CouponDAO {
 	 */
 	public void addCouponAndCompanyJoin(Coupon coupon, long companyId);
 
-	public void removeCouponAndCompanyJoin(Coupon coupon, long companyId);
+	public void removeCouponFromJoinTables(Coupon coupon);
 
-	public boolean checkCompanyCouponExisting(Coupon coupon, long companyId);
+	/**
+	 * 
+	 * @param coupon
+	 * @param companyId
+	 * @return true if the coupon is exists in the company, and false if the coupon
+	 *         is not exist
+	 */
+
+	public boolean checkCouponExisting(long id);
+
+	public boolean checkCompanyCouponExisting(long couponId, long companyId);
 }// Coupon DAO

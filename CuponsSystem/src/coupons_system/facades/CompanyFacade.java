@@ -9,6 +9,7 @@ import coupons_system.dao.CouponDAO;
 import coupons_system.dao.CouponDBDAO;
 import coupons_system.exceptions.ClientNotFoundException;
 import coupons_system.exceptions.CouponAlreadyExistException;
+import coupons_system.exceptions.CouponNotFoundException;
 import coupons_system.javabeans.Company;
 import coupons_system.javabeans.Coupon;
 import coupons_system.javabeans.CouponType;
@@ -35,18 +36,30 @@ public class CompanyFacade implements CouponClientFacade {
 		return ret;
 	}// login
 
-	public void updateCoupon(Coupon coupon) {
-		_couponDAO.updateCoupon(coupon);
+	public void updateCoupon(Coupon coupon) throws CouponNotFoundException {
+		if (_couponDAO.checkCompanyCouponExisting(coupon.get_id(), _currentCompany.get_id())) {
+			_couponDAO.updateCoupon(coupon);
+		} else {
+			throw new CouponNotFoundException("The coupon is not exist!");
+		}
 	}// updateCoupon
 
-	public void removeCoupon(Coupon coupon) {
-		_couponDAO.removeCoupon(coupon);
-		_couponDAO.removeCouponAndCompanyJoin(coupon, _currentCompany.getId());
-		System.out.println("Coupon " + coupon.get_title() + " was removed");
+	public void removeCoupon(Coupon coupon) throws CouponNotFoundException {
+		if (_couponDAO.checkCompanyCouponExisting(coupon.get_id(), _currentCompany.get_id())) {
+			_couponDAO.removeCoupon(coupon);
+			_couponDAO.removeCouponFromJoinTables(coupon);
+			System.out.println("Coupon " + coupon.get_title() + " was removed");
+		} else {
+			throw new CouponNotFoundException("The coupon is not exists!");
+		}
 	}// removeCoupon
 
-	public Coupon getCoupon(long id) {
-		return _couponDAO.getCoupon(id);
+	public Coupon getCoupon(long couponId) throws CouponNotFoundException {
+		if (_couponDAO.checkCouponExisting(couponId)) {
+			return _couponDAO.getCoupon(couponId);
+		} else {
+			throw new CouponNotFoundException("The coupon is not exists!");
+		}
 	}// get coupon
 
 	public Collection<Coupon> getAllCoupons() {
@@ -65,7 +78,7 @@ public class CompanyFacade implements CouponClientFacade {
 	}// get coupons by type
 
 	public void createCoupon(Coupon coupon) throws CouponAlreadyExistException {
-		if (_couponDAO.checkCompanyCouponExisting(coupon, _currentCompany.getId())) {
+		if (!_couponDAO.checkCompanyCouponExisting(coupon.get_id(), _currentCompany.getId())) {
 			_couponDAO.createCoupon(coupon);
 			_couponDAO.addCouponAndCompanyJoin(coupon, _currentCompany.getId());
 		} else {

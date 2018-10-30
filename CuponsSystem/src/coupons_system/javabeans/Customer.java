@@ -6,8 +6,41 @@ public class Customer {
 	private long _id;
 	private String _customerName;
 	private String _password;
+
+	public long get_id() {
+		return _id;
+	}
+
+	public void set_id(long _id) {
+		this._id = _id;
+	}
+
+	public String get_customerName() {
+		return _customerName;
+	}
+
+	public void set_customerName(String _customerName) {
+		this._customerName = _customerName;
+	}
+
+	public String get_password() {
+		return _password;
+	}
+
+	public void set_password(String _password) {
+		this._password = _password;
+	}
+
+	public Collection<Coupon> get_coupons() {
+		return _coupons;
+	}
+
+	public void set_coupons(Collection<Coupon> _coupons) {
+		this._coupons = _coupons;
+	}
+
 	private Collection<Coupon> _coupons;
-	
+
 	public Customer(long id, String customerName, String password) {
 		_id = id;
 		_customerName = customerName;
@@ -38,9 +71,5 @@ public class Customer {
 	public String toString() {
 		return _customerName + " " + _id;
 	}// to string
-	
-	
-	
-	
-	
+
 }// Customer

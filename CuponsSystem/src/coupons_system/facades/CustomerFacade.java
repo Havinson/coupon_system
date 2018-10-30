@@ -8,6 +8,7 @@ import coupons_system.dao.CouponDBDAO;
 import coupons_system.dao.CustomerDAO;
 import coupons_system.dao.CustomerDBDAO;
 import coupons_system.exceptions.ClientNotFoundException;
+import coupons_system.exceptions.CouponNotFoundException;
 import coupons_system.javabeans.Coupon;
 import coupons_system.javabeans.CouponType;
 import coupons_system.javabeans.Customer;
@@ -36,17 +37,23 @@ public class CustomerFacade implements CouponClientFacade {
 		return ret;
 	}// login
 
-	public void purchaseCoupon(Coupon coupon) {
-		if (_couponDao.checkCouponExisting(coupon, _currentCustomer) == false
-				&& _couponDao.checkCouponAmount(coupon) > 0) {
-			_couponDao.getCoupon(coupon.get_id()).set_amount(-1);
-			_customerDao.addToCustomerCoupon(_currentCustomer, coupon);
-			_couponDao.updateCoupon(coupon);
+	public void purchaseCoupon(Coupon coupon) throws CouponNotFoundException {
+		if (_couponDao.checkCouponExisting(coupon.get_id())) {
+			if (_couponDao.checkIfTheCouponPurchased(coupon, _currentCustomer) == false
+					&& _couponDao.checkCouponAmount(coupon) > 0) {
+				_couponDao.getCoupon(coupon.get_id()).set_amount(-1);
+				_customerDao.addToCustomerCoupon(_currentCustomer, coupon);
+				_couponDao.updateCoupon(coupon);
+			} else {
+				throw new CouponNotFoundException("You can`t purchase this coupoun!");
+			}
+		} else {
+			throw new CouponNotFoundException("The coupon is not exists!");
 		}
 	}// purchase Coupon
 
 	public Collection<Coupon> getAllPurchasedCoupons() {
-		Collection<Coupon> coupons = _customerDao.getCoupons(_currentCustomer);
+		Collection<Coupon> coupons = _couponDao.getAllCustomerCoupons(_currentCustomer.getId());
 		return coupons;
 	}// get all purchased coupons
 

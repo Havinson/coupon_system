@@ -31,11 +31,12 @@ public class CustomerDBDAO implements CustomerDAO {
 			prepStm.setString(2, customer.getCustomerName());
 			prepStm.setString(3, customer.getPassword());
 			prepStm.executeUpdate();
-			_pool.returnConnection(conn);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			_pool.returnConnection(conn);
 		}
 	}// create customer
 
@@ -48,11 +49,12 @@ public class CustomerDBDAO implements CustomerDAO {
 			prepStm = conn.prepareStatement("DELETE FROM Customer WHERE ID = ?");
 			prepStm.setLong(1, customer.getId());
 			prepStm.executeUpdate();
-			_pool.returnConnection(conn);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			_pool.returnConnection(conn);
 		}
 	}// remove customer
 
@@ -63,17 +65,18 @@ public class CustomerDBDAO implements CustomerDAO {
 		try {
 			conn = _pool.getConnection();
 			prepStm = conn.prepareStatement(
-					"UPDATE Customer SET " + "ID = ?, " + "CompanyName = ?," + "Password = ?" + " WHERE ID = ?;");
+					"UPDATE Customer SET " + "ID = ?, " + "CustomerName = ?," + "Password = ?" + " WHERE ID = ?;");
 			prepStm.setLong(1, customer.getId());
 			prepStm.setString(2, customer.getCustomerName());
 			prepStm.setString(3, customer.getPassword());
 			prepStm.setLong(4, customer.getId());
 			prepStm.executeUpdate();
-			_pool.returnConnection(conn);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			_pool.returnConnection(conn);
 		}
 	}// update customer
 
@@ -82,7 +85,7 @@ public class CustomerDBDAO implements CustomerDAO {
 		Customer customer = null;
 		PreparedStatement prepStm;
 		ResultSet resultSet;
-		Connection conn;
+		Connection conn = null;
 		try {
 			conn = _pool.getConnection();
 			prepStm = conn.prepareStatement("SELECT * FROM Customer WHERE ID =?");
@@ -91,11 +94,12 @@ public class CustomerDBDAO implements CustomerDAO {
 			resultSet.next();
 			customer = new Customer(resultSet.getLong("ID"), resultSet.getString("CustomerName"),
 					resultSet.getString("Password"));
-			_pool.returnConnection(conn);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			_pool.returnConnection(conn);
 		}
 		return customer;
 	}// get customer
@@ -105,7 +109,7 @@ public class CustomerDBDAO implements CustomerDAO {
 		List<Customer> customers = new ArrayList<>();
 		Statement stm;
 		ResultSet resultSet;
-		Connection conn;
+		Connection conn = null;
 
 		try {
 			conn = _pool.getConnection();
@@ -115,39 +119,15 @@ public class CustomerDBDAO implements CustomerDAO {
 				customers.add(new Customer(resultSet.getLong("ID"), resultSet.getString("CustomerName"),
 						resultSet.getString("Password")));
 			}
-			_pool.returnConnection(conn);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			_pool.returnConnection(conn);
 		}
 		return customers;
 	}// get all customers
-
-	@Override
-	public Collection<Coupon> getCoupons(Customer customer) {
-		List<Coupon> coupons = new ArrayList<>();
-		PreparedStatement prepStm;
-		ResultSet resultSet;
-		Connection conn;
-		CouponDBDAO couponDb = new CouponDBDAO();
-
-		try {
-			conn = _pool.getConnection();
-			prepStm = conn.prepareStatement("SELECT Coupon_ID FROM CustomerCoupon WHERE Customer_ID = ?");
-			prepStm.setLong(1, customer.getId());
-			resultSet = prepStm.executeQuery();
-			while (resultSet.next()) {
-				coupons.add(couponDb.getCoupon(resultSet.getLong("Coupon_ID")));
-			}
-			_pool.returnConnection(conn);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return coupons;
-	}// get coupons
 
 	@Override
 	public boolean login(String customerName, String password) {
@@ -176,18 +156,43 @@ public class CustomerDBDAO implements CustomerDAO {
 	@Override
 	public void addToCustomerCoupon(Customer customer, Coupon coupon) {
 		PreparedStatement stm;
-		Connection conn;
+		Connection conn = null;
 		try {
 			conn = _pool.getConnection();
 			stm = conn.prepareStatement("insert into CustomerCoupon (Customer_ID, Coupon_ID) values (?, ?)");
 			stm.setLong(1, customer.getId());
 			stm.setLong(2, coupon.get_id());
 			stm.executeUpdate();
-			_pool.returnConnection(conn);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			_pool.returnConnection(conn);
 		}
 	}// addToCustomerCoupon
+
+	@Override
+	public boolean checkCustomerExisting(Customer customer) {
+		boolean ret = false;
+		PreparedStatement stm;
+		ResultSet result;
+		Connection conn = null;
+		try {
+			conn = _pool.getConnection();
+			stm = conn.prepareStatement("select ID from customer where ID = ?");
+			stm.setLong(1, customer.getId());
+			result = stm.executeQuery();
+			if (result.next()) {
+				ret = true;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			_pool.returnConnection(conn);
+		}
+		return ret;
+	}
 }// Customer DBDAO

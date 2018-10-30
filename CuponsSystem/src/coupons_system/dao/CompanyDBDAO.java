@@ -21,23 +21,24 @@ public class CompanyDBDAO implements CompanyDAO {
 	}// c-tor
 
 	@Override
-	public void createCompany(Company comp) {
+	public void createCompany(Company company) {
 		PreparedStatement prepStm = null;
 		Connection conn = null;
 		try {
 			conn = _pool.getConnection();
 			prepStm = conn.prepareStatement(
 					"INSERT INTO Company (ID, CompanyName, Password, Email) " + "VALUES (?, ?, ?, ?)");
-			prepStm.setLong(1, comp.getId());
-			prepStm.setString(2, comp.getCompanyName());
-			prepStm.setString(3, comp.getPassword());
-			prepStm.setNString(4, comp.getEmail());
+			prepStm.setLong(1, company.getId());
+			prepStm.setString(2, company.getCompanyName());
+			prepStm.setString(3, company.getPassword());
+			prepStm.setNString(4, company.getEmail());
 			prepStm.executeUpdate();
-			_pool.returnConnection(conn);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			_pool.returnConnection(conn);
 		}
 
 	}// create company
@@ -51,11 +52,12 @@ public class CompanyDBDAO implements CompanyDAO {
 			prepStm = conn.prepareStatement("DELETE FROM Company WHERE ID = ?");
 			prepStm.setLong(1, comp.getId());
 			prepStm.executeUpdate();
-			_pool.returnConnection(conn);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			_pool.returnConnection(conn);
 		}
 	}// remove company
 
@@ -73,12 +75,12 @@ public class CompanyDBDAO implements CompanyDAO {
 			prepStm.setString(4, comp.getEmail());
 			prepStm.setLong(5, comp.getId());
 			prepStm.executeUpdate();
-			_pool.returnConnection(conn);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();
-			// TODO: take care of exception
+		} finally {
+			_pool.returnConnection(conn);
 		}
 	}// update company
 
@@ -96,11 +98,12 @@ public class CompanyDBDAO implements CompanyDAO {
 			resultSet.next();
 			company = new Company(resultSet.getLong("ID"), resultSet.getString("CompanyName"),
 					resultSet.getString("Password"), resultSet.getString("Email"));
-			_pool.returnConnection(conn);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			_pool.returnConnection(conn);
 		}
 		return company;
 	}// get company
@@ -110,7 +113,7 @@ public class CompanyDBDAO implements CompanyDAO {
 		List<Company> companies = new ArrayList<>();
 		Statement stm;
 		ResultSet resultSet;
-		Connection conn;
+		Connection conn = null;
 		try {
 			conn = _pool.getConnection();
 			stm = conn.createStatement();
@@ -119,11 +122,12 @@ public class CompanyDBDAO implements CompanyDAO {
 				companies.add(new Company(resultSet.getLong("ID"), resultSet.getString("CompanyName"),
 						resultSet.getString("Password"), resultSet.getString("Email")));
 			}
-			_pool.returnConnection(conn);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			_pool.returnConnection(conn);
 		}
 		return companies;
 	}// get companies
@@ -143,11 +147,12 @@ public class CompanyDBDAO implements CompanyDAO {
 			while (resultSet.next()) {
 				coupons.add(couponDb.getCoupon(resultSet.getLong("Coupon_ID")));
 			}
-			_pool.returnConnection(conn);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			_pool.returnConnection(conn);
 		}
 		return coupons;
 	}// get coupons
@@ -175,4 +180,27 @@ public class CompanyDBDAO implements CompanyDAO {
 		}
 		return ret;
 	}// get logged in company
+
+	@Override
+	public boolean checkCompanyExisting(Company company) {
+		Connection conn = null;
+		boolean returnValue = false;
+		ResultSet result;
+		try {
+			conn = _pool.getConnection();
+			PreparedStatement prepStm = conn.prepareStatement("SELECT ID FROM Company WHERE ID = ?");
+			prepStm.setLong(1, company.getId());
+			result = prepStm.executeQuery();
+			if (result.next()) {
+				returnValue = true;
+			}
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			_pool.returnConnection(conn);
+		}
+		return returnValue;
+	}
 }// Company DB DAO

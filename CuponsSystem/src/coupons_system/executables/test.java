@@ -1,7 +1,9 @@
 package coupons_system.executables;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 import coupons_system.facades.AdminFacade;
 import coupons_system.facades.ClientType;
@@ -19,47 +21,75 @@ public class test {
 		AdminFacade admin = null;
 		CouponSystem system = CouponSystem.getCouponSystem();
 		Collection<Company> allCompanies;
-		CompanyFacade company1 = null;
+		CompanyFacade companyFacade1 = null;
 		Coupon coupon1 = new Coupon(1, "TestCoupon1", new Date(2018, 05, 12), new Date(2019, 05, 12), 10, "CAMPING",
 				"The testCompany1 message", 29.9, "url to image testCompany1");
-		CustomerFacade customer1 = null;
-		CustomerFacade customer2 = null;
-		CustomerFacade customer3 = null;
-		CustomerFacade customer4 = null;
+		CustomerFacade customerFacade1 = null;
+		CustomerFacade customerFacade2 = null;
+		CustomerFacade customerFacade3 = null;
+		CustomerFacade customerFacade4 = null;
+		Company company1 = new Company(1, "TestCompany1", "123", "company1@email.com");
+		Company company2 = new Company(2, "TestCompany2", "123", "company1@email.com");
+		Company company3 = new Company(3, "TestCompany", "123", "company1@email.com");
+		Customer customer1 = new Customer(1, "TestCustomer", "123");
+		Customer customer2 = new Customer(2, "TestCustomer2", "123");
+		Customer customer3 = new Customer(3, "TestCustomer3", "123");
+		Customer customer4 = new Customer(4, "TestCustomer4", "123");
+
 		try {
 			admin = (AdminFacade) system.login("Admin", "12345", ClientType.ADMIN);
 
-			admin.createCompany(new Company(1, "TestCompany1", "123", "company1@email.com"));
-			admin.createCompany(new Company(2, "TestCompany2", "123", "company1@email.com"));
-			admin.createCompany(new Company(3, "TestCompany", "123", "company1@email.com"));
+			admin.createCompany(company1);
+			admin.createCompany(company2);
+			admin.createCompany(company3);
 			allCompanies = admin.getAllCompanies();
 			for (Company curr : allCompanies) {
 				System.out.println(curr);
 			}
-			company1 = (CompanyFacade) system.login("TestCompany1", "123", ClientType.COMPANY);
+			company2.set_companyName("Updated name company 2");
+			admin.updateCompany(company2);
+
+			allCompanies = admin.getAllCompanies();
+			for (Company curr : allCompanies) {
+				System.out.println(curr);
+			}
+			companyFacade1 = (CompanyFacade) system.login("TestCompany1", "123", ClientType.COMPANY);
 			System.out.println(system.login("TestCompany1", "123", ClientType.COMPANY));
-			company1.createCoupon(coupon1);
-			Collection<Coupon> coupons = company1.getAllCoupons();
+			companyFacade1.createCoupon(coupon1);
+			Collection<Coupon> coupons = companyFacade1.getAllCoupons();
 			for (Coupon curr : coupons) {
 				System.out.println(curr);
 			}
-			admin.createCustomer(new Customer(1, "TestCustomer", "123"));
-			admin.createCustomer(new Customer(2, "TestCustomer2", "123"));
-			admin.createCustomer(new Customer(3, "TestCustomer3", "123"));
-			admin.createCustomer(new Customer(4, "TestCustomer4", "123"));
-			customer1 = (CustomerFacade) system.login("TestCustomer", "123", ClientType.CUSTOMER);
-			customer2 = (CustomerFacade) system.login("TestCustomer2", "123", ClientType.CUSTOMER);
-			customer3 = (CustomerFacade) system.login("TestCustomer3", "123", ClientType.CUSTOMER);
-			customer4 = (CustomerFacade) system.login("TestCustomer4", "123", ClientType.CUSTOMER);
-			customer1.purchaseCoupon(coupon1);
-			customer2.purchaseCoupon(coupon1);
-			customer3.purchaseCoupon(coupon1);
-			customer4.purchaseCoupon(coupon1);
-			customer4.purchaseCoupon(coupon1);
-			Collection<Coupon> customersCoupons1 = customer1.getAllPurchasedCoupons();
-			Collection<Coupon> customersCoupons2 = customer1.getAllPurchasedCoupons();
-			Collection<Coupon> customersCoupons3 = customer1.getAllPurchasedCoupons();
-			Collection<Coupon> customersCoupons4 = customer1.getAllPurchasedCoupons();
+			admin.createCustomer(customer1);
+			admin.createCustomer(customer3);
+			admin.createCustomer(customer2);
+			admin.createCustomer(customer4);
+			List<Customer> customers = (ArrayList<Customer>) admin.getAllCustomers();
+			for (Customer curr : customers) {
+				System.out.println(curr);
+			}
+			customerFacade1 = (CustomerFacade) system.login("TestCustomer", "123", ClientType.CUSTOMER);
+			customerFacade2 = (CustomerFacade) system.login("TestCustomer2", "123", ClientType.CUSTOMER);
+			customerFacade3 = (CustomerFacade) system.login("TestCustomer3", "123", ClientType.CUSTOMER);
+			customerFacade4 = (CustomerFacade) system.login("TestCustomer4", "123", ClientType.CUSTOMER);
+			customer1.set_customerName("Updated name for customer 1");
+			customer2.set_customerName("Updated name for customer 2");
+			admin.updateCustomer(customer1);
+			admin.updateCustomer(customer2);
+			customers = (ArrayList<Customer>) admin.getAllCustomers();
+			for (Customer curr : customers) {
+				System.out.println(curr);
+			}
+			customerFacade1.purchaseCoupon(coupon1);
+			customerFacade2.purchaseCoupon(coupon1);
+			customerFacade3.purchaseCoupon(coupon1);
+			customerFacade4.purchaseCoupon(coupon1);
+			Collection<Coupon> customersCoupons1 = customerFacade1.getAllPurchasedCoupons();
+			Collection<Coupon> customersCoupons2 = customerFacade1.getAllPurchasedCoupons();
+			coupon1.set_title("Updated for coupon");
+			companyFacade1.updateCoupon(coupon1);
+			Collection<Coupon> customersCoupons3 = customerFacade1.getAllPurchasedCoupons();
+			Collection<Coupon> customersCoupons4 = customerFacade1.getAllPurchasedCoupons();
 			for (Coupon curr : customersCoupons1) {
 				System.out.println(curr);
 			}
@@ -72,7 +102,14 @@ public class test {
 			for (Coupon curr : customersCoupons4) {
 				System.out.println(curr);
 			}
-			company1.removeCoupon(coupon1);
+			companyFacade1.removeCoupon(coupon1);
+			admin.removeCustomer(customer1);
+			admin.removeCustomer(customer2);
+			admin.removeCustomer(customer3);
+			admin.removeCustomer(customer4);
+			admin.removeCompany(company1);
+			admin.removeCompany(company2);
+			admin.removeCompany(company3);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {

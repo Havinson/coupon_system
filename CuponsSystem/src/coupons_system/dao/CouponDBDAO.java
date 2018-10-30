@@ -41,10 +41,11 @@ public class CouponDBDAO implements CouponDAO {
 			prepStm.setDouble(8, coupon.get_price());
 			prepStm.setString(9, coupon.get_image());
 			prepStm.executeUpdate();
-			_pool.returnConnection(conn);
 
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			_pool.returnConnection(conn);
 		}
 	}// create Coupon
 
@@ -57,11 +58,12 @@ public class CouponDBDAO implements CouponDAO {
 			prepStm = conn.prepareStatement("DELETE FROM Coupon WHERE ID = ?");
 			prepStm.setLong(1, coupon.get_id());
 			prepStm.executeUpdate();
-			_pool.returnConnection(conn);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			_pool.returnConnection(conn);
 		}
 	}// removeCoupon
 
@@ -85,11 +87,12 @@ public class CouponDBDAO implements CouponDAO {
 			prepStm.setString(9, coupon.get_image());
 			prepStm.setLong(10, coupon.get_id());
 			prepStm.executeUpdate();
-			_pool.returnConnection(conn);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			_pool.returnConnection(conn);
 		}
 	}// Update coupon
 
@@ -108,11 +111,12 @@ public class CouponDBDAO implements CouponDAO {
 			cup = new Coupon(resultSet.getLong("ID"), resultSet.getString("Title"), resultSet.getDate("StartDate"),
 					resultSet.getDate("EndDate"), resultSet.getInt("Amount"), resultSet.getString("Type"),
 					resultSet.getString("Message"), resultSet.getDouble("Price"), resultSet.getString("Image"));
-			_pool.returnConnection(conn);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			_pool.returnConnection(conn);
 		}
 		return cup;
 	}// get coupon
@@ -134,11 +138,12 @@ public class CouponDBDAO implements CouponDAO {
 						resultSet.getString("Type"), resultSet.getString("Message"), resultSet.getDouble("Price"),
 						resultSet.getString("Image")));
 			}
-			_pool.returnConnection(conn);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			_pool.returnConnection(conn);
 		}
 
 		return coupons;
@@ -162,19 +167,20 @@ public class CouponDBDAO implements CouponDAO {
 						resultSet.getString("Type"), resultSet.getString("Message"), resultSet.getDouble("Price"),
 						resultSet.getString("Image")));
 			}
-			_pool.returnConnection(conn);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			_pool.returnConnection(conn);
 		}
 		return coupons;
 	}// get coupons by type
 
 	@Override
-	public boolean checkCouponExisting(Coupon coupon, Customer customer) {
+	public boolean checkIfTheCouponPurchased(Coupon coupon, Customer customer) {
 		boolean ret = false;
-		Connection conn;
+		Connection conn = null;
 		ResultSet resultSet;
 		PreparedStatement prepStm;
 		try {
@@ -185,11 +191,12 @@ public class CouponDBDAO implements CouponDAO {
 			if (resultSet.next()) {
 				ret = true;
 			}
-			_pool.returnConnection(conn);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			_pool.returnConnection(conn);
 		}
 		return ret;
 	}// check coupon existing
@@ -197,7 +204,7 @@ public class CouponDBDAO implements CouponDAO {
 	@Override
 	public int checkCouponAmount(Coupon coupon) {
 		int amount = 0;
-		Connection conn;
+		Connection conn = null;
 		ResultSet resultSet;
 		PreparedStatement prepStm;
 		try {
@@ -208,11 +215,12 @@ public class CouponDBDAO implements CouponDAO {
 			resultSet.next();
 			amount = resultSet.getInt("Amount");
 
-			_pool.returnConnection(conn);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			_pool.returnConnection(conn);
 		}
 		return amount;
 	}// check coupon amount
@@ -232,11 +240,12 @@ public class CouponDBDAO implements CouponDAO {
 			while (resultSet.next()) {
 				coupons.add(this.getCoupon(resultSet.getLong("Coupon_ID")));
 			}
-			_pool.returnConnection(conn);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			_pool.returnConnection(conn);
 		}
 
 		return coupons;
@@ -252,43 +261,47 @@ public class CouponDBDAO implements CouponDAO {
 			stm.setLong(1, coupon.get_id());
 			stm.setLong(2, companyId);
 			stm.executeUpdate();
-			_pool.returnConnection(conn);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			_pool.returnConnection(conn);
 		}
 	}// addCouponAndCompanyJoin
 
 	@Override
-	public void removeCouponAndCompanyJoin(Coupon coupon, long companyId) {
+	public void removeCouponFromJoinTables(Coupon coupon) {
 		PreparedStatement stm;
 		Connection conn = null;
 		try {
 			conn = _pool.getConnection();
-			stm = conn.prepareStatement("delete from CompanyCoupon where Coupon_ID = ? and Company_ID = ?;");
+			stm = conn.prepareStatement(" delete from CustomerCoupon where Coupon_ID = ?;");
 			stm.setLong(1, coupon.get_id());
-			stm.setLong(2, companyId);
 			stm.executeUpdate();
-			_pool.returnConnection(conn);
+			stm = conn.prepareStatement(" delete from CompanyCoupon where Coupon_ID = ?;");
+			stm.setLong(1, coupon.get_id());
+			stm.executeUpdate();
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			_pool.returnConnection(conn);
 		}
 	}// removeCouponAndCompanyJoin
 
 	/**
-	 * Returns true if coupon not exist in this company Returns false if coupon
-	 * already exist in this company
+	 * @return true if the coupon already exist in this company, and false if the
+	 *         coupon not exist in this company
 	 * 
-	 * @param Coupon object
-	 * @param        long company ID
+	 * @param Coupon object, long company ID
 	 */
 	@Override
-	public boolean checkCompanyCouponExisting(Coupon coupon, long companyId) {
-		boolean ret = true;
-		Connection conn;
+	public boolean checkCompanyCouponExisting(long couponId, long companyId) {
+		boolean ret = false;
+		Connection conn = null;
 		ResultSet resultSet;
 		PreparedStatement prepStm;
 		try {
@@ -297,16 +310,68 @@ public class CouponDBDAO implements CouponDAO {
 			prepStm.setLong(1, companyId);
 			resultSet = prepStm.executeQuery();
 			while (resultSet.next()) {
-				if (coupon.get_id() == resultSet.getLong("Coupon_ID")) {
-					ret = false;
+				if (couponId == resultSet.getLong("Coupon_ID")) {
+					ret = true;
 				}
 			}
-			_pool.returnConnection(conn);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			_pool.returnConnection(conn);
 		}
 		return ret;
 	}// checkCompanyCouponExisting
+
+	@Override
+	public boolean checkCouponExisting(long id) {
+		boolean ret = false;
+		Connection conn = null;
+		ResultSet resultSet;
+		PreparedStatement prepStm;
+		try {
+			conn = _pool.getConnection();
+			prepStm = conn.prepareStatement("select * from Coupon where ID = ?;");
+			prepStm.setLong(1, id);
+			resultSet = prepStm.executeQuery();
+			if (resultSet.next()) {
+				ret = true;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			_pool.returnConnection(conn);
+		}
+		return ret;
+	}// checkCompanyCouponExisting
+
+	@Override
+	public Collection<Coupon> getAllCustomerCoupons(long customerId) {
+		List<Coupon> coupons = new ArrayList<>();
+		PreparedStatement prepStm;
+		ResultSet resultSet;
+		Connection conn = null;
+		CouponDBDAO couponDb = new CouponDBDAO();
+
+		try {
+			conn = _pool.getConnection();
+			prepStm = conn.prepareStatement("SELECT Coupon_ID FROM CustomerCoupon WHERE Customer_ID = ?");
+			prepStm.setLong(1, customerId);
+			resultSet = prepStm.executeQuery();
+			while (resultSet.next()) {
+				coupons.add(couponDb.getCoupon(resultSet.getLong("Coupon_ID")));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			_pool.returnConnection(conn);
+		}
+		return coupons;
+	}
+
 }// Coupon DBDAO
