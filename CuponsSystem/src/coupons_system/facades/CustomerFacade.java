@@ -33,7 +33,6 @@ public class CustomerFacade implements CouponClientFacade {
 		} else {
 			throw new ClientNotFoundException("user name or password is incorrect!");
 		}
-		;
 		return ret;
 	}// login
 

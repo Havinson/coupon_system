@@ -77,15 +77,16 @@ public class AdminFacade implements CouponClientFacade {
 	 * @throws CouponNotFoundException
 	 */
 	public void removeCompany(Company company) throws CompanyNotFoundException {
-		Collection<Coupon> coupons = company.getCoupons();
 		if (_companyDao.checkCompanyExisting(company)) {
+			Collection<Coupon> coupons = _couponDao.getAllCompanyCoupons(company.get_id());
 
-			if (coupons != null) {
+			if (!coupons.isEmpty()) {
 				for (Coupon curr : coupons) {
 					if (curr != null) {
 						_couponDao.removeCoupon(curr);
 						_couponDao.removeCouponFromJoinTables(curr);
 					}
+
 				}
 			}
 			_companyDao.removeCompany(company);
@@ -133,7 +134,7 @@ public class AdminFacade implements CouponClientFacade {
 	 */
 	public Collection<Company> getAllCompanies() throws CompanyNotFoundException {
 		Collection<Company> companies = _companyDao.getAllCompanies();
-		if (companies != null) {
+		if (!companies.isEmpty()) {
 			return companies;
 		} else {
 			throw new CompanyNotFoundException("There is no companies in the system!");
